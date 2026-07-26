@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard | BBMS</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Playfair+Display:wght@700&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="/css/dashboard.css">
+</head>
+
+<body>
+
+    <div class="dashboard-layout">
+
+        <aside class="sidebar" id="sidebar">
+
+            <a class="brand" href="/" aria-label="BBMS home">
+                <span class="brand-mark">+</span>
+                <span>Life<span>Link</span></span>
+            </a>
+
+            <nav class="navigation" aria-label="Dashboard navigation">
+
+                <a class="nav-link active" href="/dashboard">
+                    <span class="nav-icon">▦</span>
+                    Dashboard
+                </a>
+
+                <a class="nav-link" href="/blood-availability">
+                    <span class="nav-icon">◈</span>
+                    Blood Availability
+                </a>
+
+                <a class="nav-link" href="/blood-request">
+                    <span class="nav-icon">♡</span>
+                    Blood Request
+                </a>
+
+                <a class="nav-link" href="/donor">
+                    <span class="nav-icon">♡</span>
+                    Donors
+                </a>
+
+                <a class="nav-link" href="#donation-summary">
+                    <span class="nav-icon">◷</span>
+                    Donation History
+                </a>
+
+            </nav>
+
+            <button class="logout-button" id="logoutButton" type="button">
+
+                <span class="nav-icon">↪</span>
+                Logout
+
+            </button>
+
+        </aside>
+
+        <main class="main-content">
+
+            <header class="topbar">
+
+                <button class="menu-button" id="menuButton" type="button" aria-label="Open navigation"
+                    aria-expanded="false">
+
+                    ☰
+
+                </button>
+
+                <div>
+
+                    <p class="eyebrow">
+                        PATIENT PORTAL
+                    </p>
+
+                    <h1>
+                        Welcome back,
+                        <span id="welcomeName">
+                            Member
+                        </span>
+                    </h1>
+
+                </div>
+
+                <div class="topbar-user">
+
+                    <span class="status-dot"></span>
+
+                    <span>
+                        Account active
+                    </span>
+
+                </div>
+
+            </header>
+
+            <section class="profile-card card" aria-labelledby="profileTitle">
+
+                <div class="profile-identity">
+
+                    <img id="profilePhoto" src="/images/default-profile.svg" alt="Default profile avatar">
+
+                    <div>
+
+                        <p class="eyebrow">
+                            YOUR PROFILE
+                        </p>
+
+                        <h2 id="profileTitle">
+                            Loading profile...
+                        </h2>
+
+                        <p id="profileEmail">
+                            Please wait while we retrieve your details.
+                        </p>
+
+                    </div>
+
+                </div>
+
+                <div class="profile-actions">
+
+                    <div class="blood-badge">
+
+                        <span>Blood Group</span>
+
+                        <strong id="bloodGroup">
+                            --
+                        </strong>
+
+                    </div>
+
+                    <div class="donor-widget">
+
+                        <div class="donor-widget-header">
+
+                            <div class="donor-icon">
+                                ❤️
+                            </div>
+
+                            <div>
+
+                                <p class="eyebrow">
+                                    BECOME A DONOR
+                                </p>
+
+                                <h3>
+                                    Save Lives
+                                </h3>
+
+                                <p class="donor-text">
+                                    Register yourself as a blood donor and help save lives.
+                                </p>
+
+                            </div>
+
+                        </div>
+
+                        <button id="donorButton" class="donor-button" type="button">
+
+                            Want to Donate
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </section>
+            <section class="content-grid">
+
+                <article class="information-card card" id="personal-information">
+
+                    <div class="section-heading">
+
+                        <div>
+
+                            <p class="eyebrow">
+                                ACCOUNT DETAILS
+                            </p>
+
+                            <h2>
+                                Personal Information
+                            </h2>
+
+                        </div>
+
+                        <span class="verified">
+                            ● Verified member
+                        </span>
+
+                    </div>
+
+                    <dl class="details-list">
+
+                        <div>
+
+                            <dt>
+                                Full name
+                            </dt>
+
+                            <dd id="fullName">
+                                --
+                            </dd>
+
+                        </div>
+
+                        <div>
+
+                            <dt>
+                                Phone number
+                            </dt>
+
+                            <dd id="phoneNumber">
+                                --
+                            </dd>
+
+                        </div>
+
+                        <div>
+
+                            <dt>
+                                Email address
+                            </dt>
+
+                            <dd id="emailAddress">
+                                --
+                            </dd>
+
+                        </div>
+
+                        <div>
+
+                            <dt>
+                                Member since
+                            </dt>
+
+                            <dd id="memberSince">
+                                --
+                            </dd>
+
+                        </div>
+
+                    </dl>
+
+                </article>
+
+                <article class="donation-card card" id="donation-summary">
+
+                    <p class="eyebrow">
+                        YOUR CONTRIBUTION
+                    </p>
+
+                    <h2>
+                        Donation Summary
+                    </h2>
+
+                    <div class="summary-number">
+
+                        <strong id="donationCount">
+                            0
+                        </strong>
+
+                        <span>
+                            donations
+                        </span>
+
+                    </div>
+
+                    <p class="summary-copy">
+                        Your donation history will appear here once the module is available.
+                    </p>
+
+                    <a class="text-link" href="/blood-request">
+
+                        Explore blood requests
+
+                        <span>→</span>
+
+                    </a>
+
+                </article>
+
+            </section>
+
+            <section class="last-donation card">
+
+                <div class="last-donation-icon">
+                    ♥
+                </div>
+
+                <div>
+
+                    <p class="eyebrow">
+                        LAST DONATION
+                    </p>
+
+                    <h2>
+                        No donation recorded yet
+                    </h2>
+
+                    <p>
+                        When you donate blood, your latest donation details will be shown here.
+                    </p>
+
+                </div>
+
+                <span class="empty-state">
+                    Awaiting first donation
+                </span>
+
+            </section>
+            <section id="settings" class="settings-note card">
+
+                <span>⚙</span>
+
+                <p>
+                    Settings will be available in the next module.
+                </p>
+
+            </section>
+
+        </main>
+
+    </div>
+
+    <div class="sidebar-overlay" id="sidebarOverlay">
+    </div>
+
+    <script src="/js/dashboard.js"></script>
+
+</body>
+
+</html>

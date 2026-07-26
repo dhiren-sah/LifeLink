@@ -1,0 +1,355 @@
+/* ===========================
+   RESET
+=========================== */
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial, Helvetica, sans-serif;
+}
+
+body{
+    background:#f5f5f5;
+    color:#222;
+}
+
+
+/* ===========================
+   HEADER
+=========================== */
+
+header{
+
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+
+    padding:18px 8%;
+
+    background:#c62828;
+}
+
+.logo h2{
+
+    color:white;
+
+}
+
+nav{
+
+    display:flex;
+    gap:25px;
+
+}
+
+nav a{
+
+    text-decoration:none;
+    color:white;
+    font-weight:bold;
+    transition:.3s;
+
+}
+
+nav a:hover{
+
+    color:#ffe082;
+
+}
+
+
+/* ===========================
+   HERO
+=========================== */
+
+.hero{
+
+    height:85vh;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    text-align:center;
+
+    background:linear-gradient(rgba(0,0,0,.55),
+    rgba(0,0,0,.55)),
+    url("../images/blood.jpg");
+
+    background-size:cover;
+    background-position:center;
+
+    color:white;
+
+}
+
+.hero-content{
+
+    width:70%;
+
+}
+
+.hero h1{
+
+    font-size:55px;
+
+    margin-bottom:20px;
+
+}
+
+.hero p{
+
+    font-size:20px;
+
+    line-height:35px;
+
+    margin-bottom:35px;
+
+}
+
+.buttons{
+
+    display:flex;
+
+    justify-content:center;
+
+    gap:20px;
+
+}
+
+.btn,
+.btn2{
+
+    text-decoration:none;
+
+    padding:15px 35px;
+
+    border-radius:5px;
+
+    font-weight:bold;
+
+}
+
+.btn{
+
+    background:#e53935;
+
+    color:white;
+
+}
+
+.btn:hover{
+
+    background:#b71c1c;
+
+}
+
+.btn2{
+
+    background:white;
+
+    color:#c62828;
+
+}
+
+.btn2:hover{
+
+    background:#eeeeee;
+
+}
+
+
+/* ===========================
+   SEARCH
+=========================== */
+
+.search{
+
+    padding:80px 8%;
+
+    text-align:center;
+
+}
+
+.search h2{
+
+    margin-bottom:30px;
+
+}
+
+.search form{
+
+    display:flex;
+
+    justify-content:center;
+
+    gap:15px;
+
+    flex-wrap:wrap;
+
+}
+
+.search select{
+
+    width:250px;
+
+    padding:14px;
+
+}
+
+.search button{
+
+    padding:14px 35px;
+
+    border:none;
+
+    background:#c62828;
+
+    color:white;
+
+    cursor:pointer;
+
+}
+
+.search button:hover{
+
+    background:#b71c1c;
+
+}
+
+
+/* ===========================
+   FEATURES
+=========================== */
+
+.features{
+
+    display:grid;
+
+    grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+
+    gap:25px;
+
+    padding:80px 8%;
+
+}
+
+.card{
+
+    background:white;
+
+    padding:30px;
+
+    border-radius:10px;
+
+    text-align:center;
+
+    box-shadow:0 5px 15px rgba(0,0,0,.1);
+
+    transition:.3s;
+
+}
+
+.card:hover{
+
+    transform:translateY(-8px);
+
+}
+
+.card h3{
+
+    margin-bottom:15px;
+
+}
+
+
+/* ===========================
+   STATS
+=========================== */
+
+.stats{
+
+    display:grid;
+
+    grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+
+    gap:20px;
+
+    background:#c62828;
+
+    color:white;
+
+    padding:60px 8%;
+
+    text-align:center;
+
+}
+
+.stats h2{
+
+    font-size:40px;
+
+    margin-bottom:10px;
+
+}
+
+
+/* ===========================
+   FOOTER
+=========================== */
+
+footer{
+
+    background:#222;
+
+    color:white;
+
+    text-align:center;
+
+    padding:25px;
+
+}
+
+
+/* ===========================
+   RESPONSIVE
+=========================== */
+
+@media(max-width:768px){
+
+    header{
+
+        flex-direction:column;
+
+        gap:20px;
+
+    }
+
+    nav{
+
+        flex-direction:column;
+
+        text-align:center;
+
+    }
+
+    .hero h1{
+
+        font-size:35px;
+
+    }
+
+    .hero p{
+
+        font-size:17px;
+
+    }
+
+    .buttons{
+
+        flex-direction:column;
+
+    }
+
+}

@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blood Availability | BBMS</title>
+
+    <link rel="stylesheet" href="/css/blood-availability.css">
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+
+    <header class="header">
+        <div class="logo">
+            <i class="fa-solid fa-droplet"></i>
+            <h2>Blood Bank Management System</h2>
+        </div>
+    </header>
+
+    <main class="container">
+
+        <section class="title-section">
+            <h1>Blood Availability</h1>
+            <p>Check available blood units in the blood bank.</p>
+        </section>
+
+        <section class="search-section">
+
+            <div class="search-box">
+                <input
+                    type="text"
+                    id="searchInput"
+                    placeholder="Search Blood Group..."
+                >
+            </div>
+
+            <div class="filter-box">
+
+                <select id="bloodGroupFilter">
+                    <option value="">All Blood Groups</option>
+
+                    <option>A+</option>
+                    <option>A-</option>
+
+                    <option>B+</option>
+                    <option>B-</option>
+
+                    <option>AB+</option>
+                    <option>AB-</option>
+
+                    <option>O+</option>
+                    <option>O-</option>
+
+                </select>
+
+            </div>
+
+            <button id="refreshBtn">
+                <i class="fa-solid fa-rotate"></i>
+                Refresh
+            </button>
+
+        </section>
+
+        <section class="table-section">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+
+                        <th>#</th>
+
+                        <th>Blood Group</th>
+
+                        <th>Available Units</th>
+
+                        <th>Last Updated</th>
+
+                        <th>Status</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody id="bloodTableBody">
+
+                    <!-- JavaScript Data -->
+
+                </tbody>
+
+            </table>
+
+        </section>
+
+        <section id="emptyState" class="empty-state" style="display:none;">
+
+            <i class="fa-solid fa-circle-exclamation"></i>
+
+            <h2>No Blood Available</h2>
+
+            <p>No matching blood record found.</p>
+
+        </section>
+
+    </main>
+
+    <script src="/js/blood-availability.js"></script>
+
+</body>
+</html>

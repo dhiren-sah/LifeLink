@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Donars | LifeLink BBMS</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="/css/donor.css">
+</head>
+<body>
+
+    <div class="container">
+
+        <header class="page-header">
+            <h1>Available Donars</h1>
+            <p>These members are currently available to donate blood.</p>
+        </header>
+
+        <div class="search-box">
+            <input
+                type="text"
+                id="searchInput"
+                placeholder="Search donor by name..."
+            >
+        </div>
+
+        <div class="table-container">
+
+            <table>
+
+                <thead>
+                    <tr>
+                        <th>Full Name</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+
+                <tbody id="donorTableBody">
+
+                    <tr>
+                        <td colspan="2" style="text-align:center;">
+                            Loading donors...
+                        </td>
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+    <script src="/js/donor.js"></script>
+
+</body>
+</html>

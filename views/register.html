@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Register | BBMS</title>
+
+    <link rel="stylesheet" href="/css/register.css">
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="register-box">
+
+        <h1>Create Account</h1>
+
+        <p>Blood Bank Management System</p>
+
+        <form id="registerForm">
+
+            <input
+                type="text"
+                id="fullname"
+                placeholder="Full Name"
+                required
+            >
+
+            <input
+                type = "tel"
+                id = "phoneNumber"
+                placeholder="Phone Number"
+                required
+            >
+
+            
+            <input
+                type="email"
+                id="email"
+                placeholder="Email"
+            >
+
+            <input
+                type="password"
+                id="password"
+                placeholder="Password"
+                required
+            >
+
+            <select id="bloodGroup" required>
+
+                <option value="">Select Blood Group</option>
+
+                <option>A+</option>
+                <option>A-</option>
+
+                <option>B+</option>
+                <option>B-</option>
+
+                <option>AB+</option>
+                <option>AB-</option>
+
+                <option>O+</option>
+                <option>O-</option>
+
+            </select>
+
+            <button type="submit">
+
+                Register
+
+            </button>
+
+        </form>
+
+        <div class="bottom">
+
+            Already have an account?
+
+            <a href="/login">
+
+                Login
+
+            </a>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script src="/js/register.js"></script>
+
+</body>
+
+</html>
