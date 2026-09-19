@@ -19,6 +19,16 @@ router.get("/register", (req, res) => {
     res.sendFile(path.join(__dirname, "../views/register.html"));
 });
 
+// Forgot Password
+router.get("/forgot-password", (req, res) => {
+    res.sendFile(path.join(__dirname, "../views/forgot-password.html"));
+});
+
+// Reset Password
+router.get("/reset-password", (req, res) => {
+    res.sendFile(path.join(__dirname, "../views/reset-password.html"));
+});
+
 // Dashboard
 router.get("/dashboard", requireAuth, (req, res) => {
     res.sendFile(path.join(__dirname, "../views/dashboard.html"));
