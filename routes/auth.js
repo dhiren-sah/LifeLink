@@ -11,19 +11,16 @@ const { requireAuth } = require("../middleware/auth");
 // AUTHENTICATION
 // ==============================
 
-// Register
 router.post(
     "/register",
     authController.register
 );
 
-// Login
 router.post(
     "/login",
     authController.login
 );
 
-// Logout
 router.post(
     "/logout",
     authController.logout
@@ -31,16 +28,14 @@ router.post(
 
 
 // ==============================
-// FORGOT PASSWORD
+// PASSWORD RESET
 // ==============================
 
-// Request password reset email
 router.post(
     "/forgot-password",
     authController.requestPasswordReset
 );
 
-// Reset password using token
 router.post(
     "/reset-password",
     authController.resetPassword
@@ -51,21 +46,18 @@ router.post(
 // PROFILE
 // ==============================
 
-// Get profile
 router.get(
     "/profile",
     requireAuth,
     authController.getProfile
 );
 
-// Update profile
 router.put(
     "/profile",
     requireAuth,
     authController.updateProfile
 );
 
-// Upload profile photo
 router.post(
     "/profile/photo",
     requireAuth,

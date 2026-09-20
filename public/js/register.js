@@ -1,37 +1,89 @@
-const registerForm = document.getElementById("registerForm");
+const registerForm =
+    document.getElementById("registerForm");
 
-registerForm.addEventListener("submit", async (event) => {
 
-    event.preventDefault();
+registerForm.addEventListener(
+    "submit",
+    async (event) => {
 
-    const fullName = document.getElementById("fullname").value;
-    const phoneNumber = document.getElementById("phoneNumber").value;
-    const email = document.getElementById("email").value;
-    const password = document.getElementById("password").value;
-    const bloodGroup = document.getElementById("bloodGroup").value;
+        event.preventDefault();
 
-    const response = await fetch("/auth/register", {
 
-        method: "POST",
+        const fullName =
+            document.getElementById("fullname").value.trim();
 
-        headers: {
-            "Content-Type": "application/json"
-        },
+        const phoneNumber =
+            document.getElementById("phoneNumber").value.trim();
 
-        body: JSON.stringify({
-            fullName,
-            phoneNumber,
-            email,
-            password,
-            bloodGroup
-        })
+        const email =
+            document.getElementById("email").value.trim();
 
-    });
+        const password =
+            document.getElementById("password").value;
 
-    const data = await response.json();
+        const bloodGroup =
+            document.getElementById("bloodGroup").value;
 
-    alert(data.message);
 
-    if (data.success) window.location.href = "/login";
+        try {
 
-});
+            const response =
+                await fetch(
+                    "/auth/register",
+                    {
+
+                        method: "POST",
+
+                        headers: {
+                            "Content-Type":
+                                "application/json"
+                        },
+
+                        body: JSON.stringify({
+
+                            fullName,
+
+                            phoneNumber,
+
+                            email,
+
+                            password,
+
+                            bloodGroup
+
+                        })
+
+                    }
+                );
+
+
+            const data =
+                await response.json();
+
+
+            alert(data.message);
+
+
+            if (data.success) {
+
+                window.location.href =
+                    "/login";
+
+            }
+
+
+        } catch (error) {
+
+            console.error(
+                "REGISTER ERROR:",
+                error
+            );
+
+            alert(
+                "Unable to connect to the server."
+            );
+
+        }
+
+    }
+);

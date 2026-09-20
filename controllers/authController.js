@@ -4,6 +4,7 @@ const nodemailer = require("nodemailer");
 
 const User = require("../models/User");
 const Donor = require("../models/Donor");
+
 const {
     createSession,
     clearSession
@@ -15,13 +16,18 @@ const {
 // ==============================
 
 const transporter = nodemailer.createTransport({
+
     host: process.env.SMTP_HOST,
+
     port: Number(process.env.SMTP_PORT),
+
     secure: process.env.SMTP_SECURE === "true",
+
     auth: {
         user: process.env.SMTP_USER,
         pass: process.env.SMTP_PASS
     }
+
 });
 
 
@@ -41,50 +47,213 @@ const register = async (req, res) => {
             bloodGroup
         } = req.body;
 
+
         if (!fullName || !phoneNumber || !password || !bloodGroup) {
 
             return res.status(400).json({
+
                 success: false,
+
                 message: "Please fill all required fields."
+
             });
 
         }
 
+
+        const normalizedEmail =
+            email?.trim().toLowerCase() || null;
+
+
         const existingUser = await User.findOne({
-            phoneNumber
+
+            $or: [
+
+                { phoneNumber },
+
+                ...(normalizedEmail
+                    ? [{ email: normalizedEmail }]
+                    : [])
+
+            ]
+
         });
+
 
         if (existingUser) {
 
-            return res.status(409).json({
-                success: false,
-                message: "Phone Number Already Registered"
-            });
+            if (existingUser.phoneNumber === phoneNumber) {
+
+                return res.status(409).json({
+
+                    success: false,
+
+                    message: "Phone Number Already Registered"
+
+                });
+
+            }
+
+
+            if (
+                normalizedEmail &&
+                existingUser.email === normalizedEmail
+            ) {
+
+                return res.status(409).json({
+
+                    success: false,
+
+                    message: "Email Already Registered"
+
+                });
+
+            }
 
         }
 
-        const hashedPassword = await bcrypt.hash(password, 12);
+
+        const hashedPassword =
+            await bcrypt.hash(password, 12);
+
 
         const user = await User.create({
 
             fullName,
+
             phoneNumber,
-            email: email?.trim().toLowerCase() || null,
+
+            email: normalizedEmail,
+
             password: hashedPassword,
-            bloodGroup
+
+            bloodGroup,
+
+            emailVerified: normalizedEmail ? false : true
 
         });
 
-        const safeUser = user.toObject();
+
+        // ==================================
+        // SEND EMAIL VERIFICATION
+        // ==================================
+
+        if (normalizedEmail) {
+
+            const verificationToken =
+                crypto.randomBytes(32).toString("hex");
+
+
+            const verificationTokenHash =
+                crypto
+                    .createHash("sha256")
+                    .update(verificationToken)
+                    .digest("hex");
+
+
+            user.emailVerificationTokenHash =
+                verificationTokenHash;
+
+
+            user.emailVerificationExpires =
+                new Date(Date.now() + 15 * 60 * 1000);
+
+
+            await user.save();
+
+
+            const verificationLink =
+                `${process.env.APP_BASE_URL}/verify-email?token=${verificationToken}`;
+
+
+            await transporter.sendMail({
+
+                from: `"Blood Bank" <${process.env.SMTP_USER}>`,
+
+                to: normalizedEmail,
+
+                subject: "Verify Your Blood Bank Email",
+
+                text:
+                    `Welcome to Blood Bank.\n\n` +
+                    `Please verify your email address using the link below:\n\n` +
+                    `${verificationLink}\n\n` +
+                    `This verification link will expire in 15 minutes.`,
+
+                html: `
+
+                    <div style="
+                        font-family: Arial, sans-serif;
+                        line-height: 1.6;
+                    ">
+
+                        <h2>Welcome to Blood Bank</h2>
+
+                        <p>
+                            Thank you for registering with
+                            Blood Bank Management System.
+                        </p>
+
+                        <p>
+                            Please verify your email address
+                            by clicking the button below.
+                        </p>
+
+                        <p>
+
+                            <a
+                                href="${verificationLink}"
+                                style="
+                                    display:inline-block;
+                                    padding:12px 20px;
+                                    background:#8b0000;
+                                    color:white;
+                                    text-decoration:none;
+                                    border-radius:5px;
+                                "
+                            >
+                                Verify Email
+                            </a>
+
+                        </p>
+
+                        <p>
+                            This link will expire in
+                            <strong>15 minutes</strong>.
+                        </p>
+
+                        <p>
+                            If you did not create this account,
+                            you can safely ignore this email.
+                        </p>
+
+                    </div>
+
+                `
+
+            });
+
+        }
+
+
+        const safeUser =
+            user.toObject();
+
         delete safeUser.password;
+
 
         return res.status(201).json({
 
             success: true,
-            message: "Registration Successful",
+
+            message: normalizedEmail
+                ? "Registration successful. Please check your email to verify your account."
+                : "Registration Successful",
+
             user: safeUser
 
         });
+
 
     } catch (error) {
 
@@ -93,9 +262,127 @@ const register = async (req, res) => {
         return res.status(500).json({
 
             success: false,
+
             message: "Registration failed."
 
         });
+
+    }
+
+};
+
+
+// ==============================
+// VERIFY EMAIL
+// ==============================
+
+const verifyEmail = async (req, res) => {
+
+    try {
+
+        const token = req.query.token;
+
+
+        if (!token) {
+
+            return res.status(400).send(`
+                <h2>Invalid Verification Link</h2>
+                <p>The verification token is missing.</p>
+            `);
+
+        }
+
+
+        const tokenHash =
+            crypto
+                .createHash("sha256")
+                .update(token)
+                .digest("hex");
+
+
+        const user = await User.findOne({
+
+            emailVerificationTokenHash: tokenHash,
+
+            emailVerificationExpires: {
+                $gt: new Date()
+            }
+
+        }).select(
+            "+emailVerificationTokenHash"
+        );
+
+
+        if (!user) {
+
+            return res.status(400).send(`
+                <h2>Verification Link Invalid or Expired</h2>
+                <p>Please request a new verification email.</p>
+                <a href="/login">Go to Login</a>
+            `);
+
+        }
+
+
+        user.emailVerified = true;
+
+        user.emailVerificationTokenHash = null;
+
+        user.emailVerificationExpires = null;
+
+
+        await user.save();
+
+
+        return res.send(`
+
+            <!DOCTYPE html>
+
+            <html>
+
+            <head>
+
+                <title>Email Verified | Blood Bank</title>
+
+                <meta
+                    name="viewport"
+                    content="width=device-width, initial-scale=1.0"
+                >
+
+            </head>
+
+            <body
+                style="
+                    font-family:Arial;
+                    text-align:center;
+                    padding:60px;
+                "
+            >
+
+                <h2>Email Verified Successfully</h2>
+
+                <p>
+                    Your Blood Bank email has been verified successfully.
+                </p>
+
+                <a href="/login">
+                    Go to Login
+                </a>
+
+            </body>
+
+            </html>
+
+        `);
+
+
+    } catch (error) {
+
+        console.error("VERIFY EMAIL ERROR:", error);
+
+        return res.status(500).send(`
+            <h2>Unable to verify email.</h2>
+        `);
 
     }
 
@@ -110,40 +397,56 @@ const login = async (req, res) => {
 
     try {
 
-        const { identifier, password } = req.body;
+        const {
+            identifier,
+            password
+        } = req.body;
+
 
         if (!identifier || !password) {
 
             return res.status(400).json({
 
                 success: false,
-                message: "Email/Phone Number and Password are required."
+
+                message:
+                    "Email/Phone Number and Password are required."
 
             });
 
         }
 
+
         let user;
+
 
         if (identifier.includes("@")) {
 
             user = await User.findOne({
-                email: identifier.trim().toLowerCase()
+
+                email:
+                    identifier.trim().toLowerCase()
+
             });
 
         } else {
 
             user = await User.findOne({
-                phoneNumber: identifier.trim()
+
+                phoneNumber:
+                    identifier.trim()
+
             });
 
         }
+
 
         if (!user) {
 
             return res.status(404).json({
 
                 success: false,
+
                 message: "User Not Found"
 
             });
@@ -151,34 +454,51 @@ const login = async (req, res) => {
         }
 
 
-        // --------------------------------
-        // Password verification
-        // --------------------------------
+        // ==============================
+        // EMAIL VERIFICATION CHECK
+        // ==============================
 
-        let passwordValid = false;
+        if (
+            user.email &&
+            !user.emailVerified
+        ) {
 
-        // New bcrypt passwords
-        if (user.password.startsWith("$2")) {
+            return res.status(403).json({
 
-            passwordValid = await bcrypt.compare(
-                password,
-                user.password
-            );
+                success: false,
+
+                message:
+                    "Please verify your email before logging in."
+
+            });
 
         }
 
-        // Old plain-text passwords
-        else {
 
-            passwordValid = user.password === password;
+        let passwordValid = false;
 
-            // Upgrade old password to bcrypt
+
+        if (user.password.startsWith("$2")) {
+
+            passwordValid =
+                await bcrypt.compare(
+                    password,
+                    user.password
+                );
+
+        } else {
+
+            passwordValid =
+                user.password === password;
+
+
             if (passwordValid) {
 
-                user.password = await bcrypt.hash(
-                    password,
-                    12
-                );
+                user.password =
+                    await bcrypt.hash(
+                        password,
+                        12
+                    );
 
                 await user.save();
 
@@ -186,11 +506,13 @@ const login = async (req, res) => {
 
         }
 
+
         if (!passwordValid) {
 
             return res.status(401).json({
 
                 success: false,
+
                 message: "Invalid Password"
 
             });
@@ -198,16 +520,25 @@ const login = async (req, res) => {
         }
 
 
-        const token = createSession(user._id);
-
-        res.cookie("bbmsSession", token, {
-            httpOnly: true,
-            sameSite: "lax",
-            path: "/"
-        });
+        const token =
+            createSession(user._id);
 
 
-        const safeUser = user.toObject();
+        res.cookie(
+            "Blood BankSession",
+            token,
+            {
+                httpOnly: true,
+
+                sameSite: "lax",
+
+                path: "/"
+            }
+        );
+
+
+        const safeUser =
+            user.toObject();
 
         delete safeUser.password;
 
@@ -215,10 +546,13 @@ const login = async (req, res) => {
         return res.status(200).json({
 
             success: true,
+
             message: "Login Successful",
+
             user: safeUser
 
         });
+
 
     } catch (error) {
 
@@ -227,6 +561,7 @@ const login = async (req, res) => {
         return res.status(500).json({
 
             success: false,
+
             message: "Login failed."
 
         });
@@ -244,13 +579,16 @@ const requestPasswordReset = async (req, res) => {
 
     try {
 
-        const email = req.body.email?.trim().toLowerCase();
+        const email =
+            req.body.email?.trim().toLowerCase();
+
 
         if (!email) {
 
             return res.status(400).json({
 
                 success: false,
+
                 message: "Email is required."
 
             });
@@ -258,20 +596,20 @@ const requestPasswordReset = async (req, res) => {
         }
 
 
-        const user = await User.findOne({ email })
-            .select("+resetPasswordTokenHash +resetPasswordExpires");
+        const user =
+            await User.findOne({
+                email
+            }).select(
+                "+resetPasswordTokenHash +resetPasswordExpires"
+            );
 
-
-        /*
-         * Don't reveal whether an email exists.
-         * This prevents account enumeration.
-         */
 
         if (!user) {
 
             return res.status(200).json({
 
                 success: true,
+
                 message:
                     "If an account exists with this email, a password reset link has been sent."
 
@@ -280,22 +618,26 @@ const requestPasswordReset = async (req, res) => {
         }
 
 
-        // Generate random reset token
-        const resetToken = crypto.randomBytes(32).toString("hex");
+        const resetToken =
+            crypto.randomBytes(32).toString("hex");
 
 
-        // Store only hashed token
-        const resetTokenHash = crypto
-            .createHash("sha256")
-            .update(resetToken)
-            .digest("hex");
+        const resetTokenHash =
+            crypto
+                .createHash("sha256")
+                .update(resetToken)
+                .digest("hex");
 
 
-        // Token valid for 15 minutes
-        user.resetPasswordTokenHash = resetTokenHash;
+        user.resetPasswordTokenHash =
+            resetTokenHash;
+
 
         user.resetPasswordExpires =
-            new Date(Date.now() + 15 * 60 * 1000);
+            new Date(
+                Date.now() + 15 * 60 * 1000
+            );
+
 
         await user.save();
 
@@ -306,33 +648,37 @@ const requestPasswordReset = async (req, res) => {
 
         await transporter.sendMail({
 
-            from: `"BBMS" <${process.env.SMTP_USER}>`,
+            from:
+                `"Blood Bank" <${process.env.SMTP_USER}>`,
 
-            to: user.email,
+            to:
+                user.email,
 
-            subject: "BBMS Password Reset",
+            subject:
+                "Blood Bank Password Reset",
 
             text:
-                `You requested a password reset for your BBMS account.\n\n` +
-                `Reset your password using this link:\n\n` +
-                `${resetLink}\n\n` +
-                `This link will expire in 15 minutes.\n\n` +
-                `If you did not request this, you can safely ignore this email.`,
+                `Reset your Blood Bank password using this link:\n\n${resetLink}\n\nThis link expires in 15 minutes.`,
 
             html: `
-                <div style="font-family: Arial, sans-serif; line-height: 1.6;">
 
-                    <h2>BBMS Password Reset</h2>
+                <div
+                    style="
+                        font-family:Arial;
+                        line-height:1.6;
+                    "
+                >
+
+                    <h2>
+                        Blood Bank Password Reset
+                    </h2>
 
                     <p>
-                        You requested a password reset for your BBMS account.
+                        You requested a password reset.
                     </p>
 
                     <p>
-                        Click the button below to create a new password:
-                    </p>
 
-                    <p>
                         <a
                             href="${resetLink}"
                             style="
@@ -346,18 +692,16 @@ const requestPasswordReset = async (req, res) => {
                         >
                             Reset Password
                         </a>
+
                     </p>
 
                     <p>
-                        This link will expire in <strong>15 minutes</strong>.
-                    </p>
-
-                    <p>
-                        If you did not request this password reset,
-                        you can safely ignore this email.
+                        This link expires in
+                        <strong>15 minutes</strong>.
                     </p>
 
                 </div>
+
             `
 
         });
@@ -372,14 +716,20 @@ const requestPasswordReset = async (req, res) => {
 
         });
 
+
     } catch (error) {
 
-        console.error("FORGOT PASSWORD ERROR:", error);
+        console.error(
+            "FORGOT PASSWORD ERROR:",
+            error
+        );
 
         return res.status(500).json({
 
             success: false,
-            message: "Unable to process password reset request."
+
+            message:
+                "Unable to process password reset request."
 
         });
 
@@ -407,7 +757,9 @@ const resetPassword = async (req, res) => {
             return res.status(400).json({
 
                 success: false,
-                message: "Reset token and new password are required."
+
+                message:
+                    "Reset token and new password are required."
 
             });
 
@@ -419,28 +771,33 @@ const resetPassword = async (req, res) => {
             return res.status(400).json({
 
                 success: false,
-                message: "Password must be at least 8 characters long."
+
+                message:
+                    "Password must be at least 8 characters long."
 
             });
 
         }
 
 
-        const tokenHash = crypto
-            .createHash("sha256")
-            .update(token)
-            .digest("hex");
+        const tokenHash =
+            crypto
+                .createHash("sha256")
+                .update(token)
+                .digest("hex");
 
 
-        const user = await User.findOne({
+        const user =
+            await User.findOne({
 
-            resetPasswordTokenHash: tokenHash,
+                resetPasswordTokenHash:
+                    tokenHash,
 
-            resetPasswordExpires: {
-                $gt: new Date()
-            }
+                resetPasswordExpires: {
+                    $gt: new Date()
+                }
 
-        });
+            });
 
 
         if (!user) {
@@ -448,22 +805,27 @@ const resetPassword = async (req, res) => {
             return res.status(400).json({
 
                 success: false,
-                message: "Reset link is invalid or expired."
+
+                message:
+                    "Reset link is invalid or expired."
 
             });
 
         }
 
 
-        user.password = await bcrypt.hash(
-            password,
-            12
-        );
+        user.password =
+            await bcrypt.hash(
+                password,
+                12
+            );
 
 
-        // Token becomes unusable immediately
-        user.resetPasswordTokenHash = null;
-        user.resetPasswordExpires = null;
+        user.resetPasswordTokenHash =
+            null;
+
+        user.resetPasswordExpires =
+            null;
 
 
         await user.save();
@@ -472,19 +834,26 @@ const resetPassword = async (req, res) => {
         return res.status(200).json({
 
             success: true,
+
             message:
                 "Password reset successful. You can now login with your new password."
 
         });
 
+
     } catch (error) {
 
-        console.error("RESET PASSWORD ERROR:", error);
+        console.error(
+            "RESET PASSWORD ERROR:",
+            error
+        );
 
         return res.status(500).json({
 
             success: false,
-            message: "Unable to reset password."
+
+            message:
+                "Unable to reset password."
 
         });
 
@@ -500,15 +869,26 @@ const resetPassword = async (req, res) => {
 const logout = (req, res) => {
 
     if (req.sessionToken) {
-        clearSession(req.sessionToken);
+
+        clearSession(
+            req.sessionToken
+        );
+
     }
 
-    res.clearCookie("bbmsSession", {
-        path: "/"
-    });
+
+    res.clearCookie(
+        "Blood BankSession",
+        {
+            path: "/"
+        }
+    );
+
 
     return res.json({
+
         success: true
+
     });
 
 };
@@ -522,50 +902,77 @@ const getProfile = async (req, res) => {
 
     try {
 
-        const { userId } = req.query;
+        const {
+            userId
+        } = req.query;
+
 
         if (!userId) {
 
             return res.status(400).json({
+
                 success: false,
-                message: "User ID is required."
+
+                message:
+                    "User ID is required."
+
             });
 
         }
 
-        const user = await User.findById(userId)
-            .select("-password");
+
+        const user =
+            await User.findById(userId)
+                .select("-password");
+
 
         if (!user) {
 
             return res.status(404).json({
+
                 success: false,
-                message: "User not found."
+
+                message:
+                    "User not found."
+
             });
 
         }
 
-        const donor = await Donor.findOne({
-            user: userId
-        });
+
+        const donor =
+            await Donor.findOne({
+                user: userId
+            });
+
 
         const profile = {
+
             ...user.toObject(),
+
             isDonor: !!donor
+
         };
 
+
         return res.status(200).json({
+
             success: true,
+
             user: profile
+
         });
+
 
     } catch (error) {
 
-        console.error("GET PROFILE ERROR:", error);
-
         return res.status(400).json({
+
             success: false,
-            message: "Unable to load profile."
+
+            message:
+                "Unable to load profile."
+
         });
 
     }
@@ -592,84 +999,127 @@ const updateProfile = async (req, res) => {
             state
         } = req.body;
 
-        if (!userId || !fullName || !phoneNumber || !bloodGroup) {
+
+        if (
+            !userId ||
+            !fullName ||
+            !phoneNumber ||
+            !bloodGroup
+        ) {
 
             return res.status(400).json({
+
                 success: false,
+
                 message:
                     "Name, phone number, and blood group are required."
+
             });
 
         }
 
-        const duplicateUser = await User.findOne({
 
-            phoneNumber,
-            _id: {
-                $ne: userId
-            }
+        const duplicateUser =
+            await User.findOne({
 
-        });
+                phoneNumber,
+
+                _id: {
+                    $ne: userId
+                }
+
+            });
+
 
         if (duplicateUser) {
 
             return res.status(409).json({
+
                 success: false,
+
                 message:
                     "Phone number is already registered."
+
             });
 
         }
 
-        const user = await User.findByIdAndUpdate(
 
-            userId,
+        const user =
+            await User.findByIdAndUpdate(
 
-            {
-                fullName: fullName.trim(),
-                phoneNumber: phoneNumber.trim(),
-                email:
-                    email?.trim().toLowerCase() || null,
-                bloodGroup,
-                address:
-                    address?.trim() || "",
-                city:
-                    city?.trim() || "",
-                state:
-                    state?.trim() || ""
-            },
+                userId,
 
-            {
-                new: true,
-                runValidators: true
-            }
+                {
 
-        ).select("-password");
+                    fullName:
+                        fullName.trim(),
+
+                    phoneNumber:
+                        phoneNumber.trim(),
+
+                    email:
+                        email?.trim().toLowerCase() || null,
+
+                    bloodGroup,
+
+                    address:
+                        address?.trim() || "",
+
+                    city:
+                        city?.trim() || "",
+
+                    state:
+                        state?.trim() || ""
+
+                },
+
+                {
+
+                    new: true,
+
+                    runValidators: true
+
+                }
+
+            ).select("-password");
+
 
         if (!user) {
 
             return res.status(404).json({
+
                 success: false,
-                message: "User not found."
+
+                message:
+                    "User not found."
+
             });
 
         }
 
+
         return res.status(200).json({
 
             success: true,
-            message: "Profile updated successfully.",
+
+            message:
+                "Profile updated successfully.",
+
             user
 
         });
 
+
     } catch (error) {
 
-        console.error("UPDATE PROFILE ERROR:", error);
-
         return res.status(400).json({
+
             success: false,
-            message: "Unable to update profile."
+
+            message:
+                "Unable to update profile."
+
         });
 
     }
@@ -685,60 +1135,86 @@ const uploadProfilePhoto = async (req, res) => {
 
     try {
 
-        const { userId } = req.body;
+        const {
+            userId
+        } = req.body;
 
-        if (!userId || !req.file) {
+
+        if (
+            !userId ||
+            !req.file
+        ) {
 
             return res.status(400).json({
+
                 success: false,
+
                 message:
                     "User ID and a profile photo are required."
+
             });
 
         }
 
-        const user = await User.findByIdAndUpdate(
 
-            userId,
+        const user =
+            await User.findByIdAndUpdate(
 
-            {
-                profilePhoto:
-                    `/uploads/profiles/${req.file.filename}`
-            },
+                userId,
 
-            {
-                new: true,
-                runValidators: true
-            }
+                {
 
-        ).select("-password");
+                    profilePhoto:
+                        `/uploads/profiles/${req.file.filename}`
+
+                },
+
+                {
+
+                    new: true,
+
+                    runValidators: true
+
+                }
+
+            ).select("-password");
+
 
         if (!user) {
 
             return res.status(404).json({
+
                 success: false,
-                message: "User not found."
+
+                message:
+                    "User not found."
+
             });
 
         }
 
+
         return res.status(200).json({
 
             success: true,
+
             message:
                 "Profile photo updated successfully.",
+
             user
 
         });
 
+
     } catch (error) {
 
-        console.error("UPLOAD PROFILE PHOTO ERROR:", error);
-
         return res.status(400).json({
+
             success: false,
+
             message:
                 "Unable to upload profile photo."
+
         });
 
     }
@@ -753,14 +1229,21 @@ const uploadProfilePhoto = async (req, res) => {
 module.exports = {
 
     register,
+
     login,
+
     logout,
 
     requestPasswordReset,
+
     resetPassword,
 
+    verifyEmail,
+
     getProfile,
+
     updateProfile,
+
     uploadProfilePhoto
 
 };
