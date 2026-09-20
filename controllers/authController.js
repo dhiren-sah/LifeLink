@@ -48,6 +48,10 @@ const register = async (req, res) => {
         } = req.body;
 
 
+        // ==============================
+        // REQUIRED FIELD VALIDATION
+        // ==============================
+
         if (!fullName || !phoneNumber || !password || !bloodGroup) {
 
             return res.status(400).json({
@@ -61,82 +65,215 @@ const register = async (req, res) => {
         }
 
 
+        // ==============================
+        // NORMALIZE DATA
+        // ==============================
+
+        const normalizedPhone =
+            phoneNumber.trim();
+
         const normalizedEmail =
             email?.trim().toLowerCase() || null;
 
 
-        const existingUser = await User.findOne({
+        // ==============================
+        // FIND EXISTING PHONE USER
+        // ==============================
 
-            $or: [
-
-                { phoneNumber },
-
-                ...(normalizedEmail
-                    ? [{ email: normalizedEmail }]
-                    : [])
-
-            ]
-
+        const phoneUser = await User.findOne({
+            phoneNumber: normalizedPhone
         });
 
 
-        if (existingUser) {
+        // ==============================
+        // FIND EXISTING EMAIL USER
+        // ==============================
 
-            if (existingUser.phoneNumber === phoneNumber) {
-
-                return res.status(409).json({
-
-                    success: false,
-
-                    message: "Phone Number Already Registered"
-
-                });
-
-            }
+        const emailUser = normalizedEmail
+            ? await User.findOne({
+                email: normalizedEmail
+            })
+            : null;
 
 
-            if (
-                normalizedEmail &&
-                existingUser.email === normalizedEmail
-            ) {
+        // ==============================
+        // VERIFIED PHONE CHECK
+        // ==============================
 
-                return res.status(409).json({
+        if (
+            phoneUser &&
+            phoneUser.emailVerified === true
+        ) {
 
-                    success: false,
+            return res.status(409).json({
 
-                    message: "Email Already Registered"
+                success: false,
 
-                });
+                message: "Phone Number Already Registered"
 
-            }
+            });
 
         }
 
+
+        // ==============================
+        // VERIFIED EMAIL CHECK
+        // ==============================
+
+        if (
+            emailUser &&
+            emailUser.emailVerified === true
+        ) {
+
+            return res.status(409).json({
+
+                success: false,
+
+                message: "Email Already Registered"
+
+            });
+
+        }
+
+
+        // ==============================
+        // HANDLE PENDING / UNVERIFIED USER
+        // ==============================
+
+        let user = null;
+
+
+        // --------------------------------
+        // BOTH PHONE AND EMAIL MATCH
+        // SAME USER
+        // --------------------------------
+
+        if (
+            phoneUser &&
+            emailUser &&
+            phoneUser._id.toString() === emailUser._id.toString()
+        ) {
+
+            user = phoneUser;
+
+        }
+
+
+        // --------------------------------
+        // ONLY PHONE MATCHES
+        // --------------------------------
+
+        else if (phoneUser && !emailUser) {
+
+            user = phoneUser;
+
+        }
+
+
+        // --------------------------------
+        // ONLY EMAIL MATCHES
+        // --------------------------------
+
+        else if (!phoneUser && emailUser) {
+
+            user = emailUser;
+
+        }
+
+
+        // --------------------------------
+        // PHONE AND EMAIL MATCH
+        // DIFFERENT PENDING USERS
+        // --------------------------------
+
+        else if (
+            phoneUser &&
+            emailUser &&
+            phoneUser._id.toString() !== emailUser._id.toString()
+        ) {
+
+            return res.status(409).json({
+
+                success: false,
+
+                message:
+                    "Phone number and email are already linked to different pending registrations. Please complete one of the pending registrations first."
+
+            });
+
+        }
+
+
+        // ==============================
+        // HASH PASSWORD
+        // ==============================
 
         const hashedPassword =
             await bcrypt.hash(password, 12);
 
 
-        const user = await User.create({
+        // ==============================
+        // CREATE OR REUSE USER
+        // ==============================
 
-            fullName,
+        if (user) {
 
-            phoneNumber,
+            // --------------------------------
+            // EXISTING UNVERIFIED USER
+            // REUSE THIS ACCOUNT
+            // --------------------------------
 
-            email: normalizedEmail,
+            user.fullName =
+                fullName.trim();
 
-            password: hashedPassword,
+            user.phoneNumber =
+                normalizedPhone;
 
-            bloodGroup,
+            user.email =
+                normalizedEmail;
 
-            emailVerified: normalizedEmail ? false : true
+            user.password =
+                hashedPassword;
 
-        });
+            user.bloodGroup =
+                bloodGroup;
+
+            user.emailVerified =
+                normalizedEmail ? false : true;
+
+        } else {
+
+            // --------------------------------
+            // COMPLETELY NEW USER
+            // --------------------------------
+
+            user = new User({
+
+                fullName:
+                    fullName.trim(),
+
+                phoneNumber:
+                    normalizedPhone,
+
+                email:
+                    normalizedEmail,
+
+                password:
+                    hashedPassword,
+
+                bloodGroup,
+
+                emailVerified:
+                    normalizedEmail ? false : true
+
+            });
+
+        }
 
 
-        // ==================================
+        // ==============================
         // SEND EMAIL VERIFICATION
-        // ==================================
+        // ==============================
 
         if (normalizedEmail) {
 
@@ -156,9 +293,12 @@ const register = async (req, res) => {
 
 
             user.emailVerificationExpires =
-                new Date(Date.now() + 15 * 60 * 1000);
+                new Date(
+                    Date.now() + 15 * 60 * 1000
+                );
 
 
+            // Save user before sending email
             await user.save();
 
 
@@ -168,11 +308,14 @@ const register = async (req, res) => {
 
             await transporter.sendMail({
 
-                from: `"Blood Bank" <${process.env.SMTP_USER}>`,
+                from:
+                    `"Blood Bank" <${process.env.SMTP_USER}>`,
 
-                to: normalizedEmail,
+                to:
+                    normalizedEmail,
 
-                subject: "Verify Your Blood Bank Email",
+                subject:
+                    "Verify Your Blood Bank Email",
 
                 text:
                     `Welcome to Blood Bank.\n\n` +
@@ -233,8 +376,23 @@ const register = async (req, res) => {
 
             });
 
+        } else {
+
+            // No email means account is considered verified
+            user.emailVerified = true;
+
+            user.emailVerificationTokenHash = null;
+
+            user.emailVerificationExpires = null;
+
+            await user.save();
+
         }
 
+
+        // ==============================
+        // SAFE USER RESPONSE
+        // ==============================
 
         const safeUser =
             user.toObject();
@@ -302,7 +460,8 @@ const verifyEmail = async (req, res) => {
 
         const user = await User.findOne({
 
-            emailVerificationTokenHash: tokenHash,
+            emailVerificationTokenHash:
+                tokenHash,
 
             emailVerificationExpires: {
                 $gt: new Date()
@@ -524,8 +683,12 @@ const login = async (req, res) => {
             createSession(user._id);
 
 
+        // ==============================
+        // CREATE LOGIN COOKIE
+        // ==============================
+
         res.cookie(
-            "Blood BankSession",
+            "bbmsSession",
             token,
             {
                 httpOnly: true,
@@ -877,8 +1040,9 @@ const logout = (req, res) => {
     }
 
 
+    // Same cookie name used during login
     res.clearCookie(
-        "Blood BankSession",
+        "bbmsSession",
         {
             path: "/"
         }
