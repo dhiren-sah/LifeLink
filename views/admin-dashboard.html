@@ -1,0 +1,1133 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <meta
+        name="description"
+        content="Blood Bank Administration Dashboard"
+    >
+
+    <title>Blood Bank - Administration</title>
+
+    <link
+        rel="stylesheet"
+        href="/css/admin-dashboard.css"
+    >
+
+    <!-- FIX: Hidden loading overlay must actually stay hidden -->
+    <style>
+        .dashboard-loading[hidden] {
+            display: none !important;
+        }
+    </style>
+
+</head>
+
+
+<body>
+
+    <div class="admin-layout">
+
+        <!-- ==============================
+             SIDEBAR
+        =============================== -->
+
+        <aside
+            class="admin-sidebar"
+            id="adminSidebar"
+        >
+
+            <!-- Brand -->
+
+            <div class="sidebar-brand">
+
+                <a
+                    href="/dashboard"
+                    class="brand-link"
+                >
+
+                    <span
+                        class="brand-icon"
+                        aria-hidden="true"
+                    >
+
+                        <svg
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            xmlns="http://www.w3.org/2000/svg"
+                        >
+
+                            <path
+                                d="M12 2.5C12 2.5 5 10.1 5 15.1C5 19 8.13 22 12 22C15.87 22 19 19 19 15.1C19 10.1 12 2.5 12 2.5Z"
+                                fill="currentColor"
+                            />
+
+                            <path
+                                d="M9.5 15.2C9.5 13.65 10.55 12.2 12 11.35"
+                                stroke="white"
+                                stroke-width="1.5"
+                                stroke-linecap="round"
+                            />
+
+                        </svg>
+
+                    </span>
+
+
+                    <span class="brand-text">
+
+                        <strong>Blood Bank</strong>
+
+                        <small>
+                            Save Lives Together
+                        </small>
+
+                    </span>
+
+                </a>
+
+            </div>
+
+
+            <!-- Navigation -->
+
+            <nav
+                class="sidebar-navigation"
+                aria-label="Admin navigation"
+            >
+
+                <p class="sidebar-section-title">
+                    MAIN MENU
+                </p>
+
+
+                <a
+                    href="/admin/dashboard"
+                    class="sidebar-nav-link active"
+                    data-section="dashboard"
+                >
+
+                    <span class="nav-icon">
+                        ⌂
+                    </span>
+
+                    <span>
+                        Dashboard
+                    </span>
+
+                </a>
+
+
+                <a
+                    href="/admin/users"
+                    class="sidebar-nav-link"
+                    data-section="users"
+                >
+
+                    <span class="nav-icon">
+                        ♟
+                    </span>
+
+                    <span>
+                        Users
+                    </span>
+
+                </a>
+
+
+                <a
+                    href="/admin/donors"
+                    class="sidebar-nav-link"
+                    data-section="donors"
+                >
+
+                    <span class="nav-icon">
+                        ♟
+                    </span>
+
+                    <span>
+                        Donors
+                    </span>
+
+                </a>
+
+
+                <a
+                    href="/admin/blood-inventory"
+                    class="sidebar-nav-link"
+                    data-section="inventory"
+                >
+
+                    <span class="nav-icon">
+                        ♦
+                    </span>
+
+                    <span>
+                        Blood Inventory
+                    </span>
+
+                </a>
+
+
+                <a
+                    href="/admin/blood-requests"
+                    class="sidebar-nav-link"
+                    data-section="requests"
+                >
+
+                    <span class="nav-icon">
+                        ▤
+                    </span>
+
+                    <span>
+                        Blood Requests
+                    </span>
+
+                </a>
+
+                <!--
+                <a
+                    href="/admin/donations"
+                    class="sidebar-nav-link"
+                    data-section="donations"
+                >
+
+                    <span class="nav-icon">
+                        ♥
+                    </span>
+
+                    <span>
+                        Donations
+                    </span>
+
+                </a>
+
+
+                <div class="sidebar-divider"></div>
+
+
+                <p class="sidebar-section-title">
+                    SYSTEM
+                </p>
+
+
+                <a
+                    href="/admin/settings"
+                    class="sidebar-nav-link"
+                    data-section="settings"
+                >
+
+                    <span class="nav-icon">
+                        ⚙
+                    </span>
+
+                    <span>
+                        Settings
+                    </span>
+
+                </a>
+            -->
+
+            </nav>
+
+    
+            <!-- Sidebar Bottom -->
+
+            <div class="sidebar-bottom">
+
+                <div class="save-lives-card">
+
+                    <div class="save-lives-icon">
+                        ♥
+                    </div>
+
+                    <h3>
+                        A Safe Blood
+                    </h3>
+
+                    <p>
+                        Saves a Life
+                    </p>
+
+                    <span>
+                        Be the reason someone lives.
+                    </span>
+
+                </div>
+
+
+                <button
+                    type="button"
+                    class="sidebar-logout-button"
+                    id="sidebarLogoutButton"
+                >
+
+                    <span class="nav-icon">
+                        ↪
+                    </span>
+
+                    <span>
+                        Logout
+                    </span>
+
+                </button>
+
+            </div>
+
+        </aside>
+
+
+        <!-- ==============================
+             MAIN AREA
+        =============================== -->
+
+        <main class="admin-main">
+
+            <!-- ==========================
+                 TOP HEADER
+            =========================== -->
+
+            <header class="admin-header">
+
+                <div class="header-left">
+
+                    <button
+                        type="button"
+                        class="sidebar-toggle"
+                        id="sidebarToggle"
+                        aria-label="Toggle sidebar"
+                        aria-expanded="true"
+                    >
+                        ☰
+                    </button>
+
+
+                    <div class="admin-search">
+
+                        <span
+                            class="search-icon"
+                            aria-hidden="true"
+                        >
+                            ⌕
+                        </span>
+
+                        <input
+                            type="search"
+                            id="adminSearch"
+                            placeholder="Search users, donors, requests..."
+                            autocomplete="off"
+                        >
+
+                    </div>
+
+                </div>
+
+
+                <div class="header-right">
+
+                    <!-- Notifications -->
+
+                    <button
+                        type="button"
+                        class="notification-button"
+                        id="notificationButton"
+                        aria-label="Notifications"
+                    >
+
+                        <span class="notification-icon">
+                            ♧
+                        </span>
+
+                        <span
+                            class="notification-badge"
+                            id="notificationBadge"
+                        >
+                            0
+                        </span>
+
+                    </button>
+
+
+                    <!-- Admin Profile -->
+
+                    <div class="admin-profile">
+
+                        <div class="admin-avatar">
+                            <span>👤</span>
+                        </div>
+
+
+                        <div class="admin-profile-info">
+
+                            <strong id="adminName">
+                                Admin
+                            </strong>
+
+                            <span>
+                                System Administrator
+                            </span>
+
+                        </div>
+
+
+                        <button
+                            type="button"
+                            class="profile-menu-button"
+                            id="profileMenuButton"
+                            aria-label="Open profile menu"
+                        >
+                            ˅
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </header>
+
+
+            <!-- ==========================
+                 DASHBOARD CONTENT
+            =========================== -->
+
+            <section class="dashboard-content">
+
+
+                <!-- Welcome -->
+
+                <div class="dashboard-welcome">
+
+                    <div>
+
+                        <h1>
+
+                            Welcome, Admin!
+
+                            <span aria-hidden="true">
+                                👋
+                            </span>
+
+                        </h1>
+
+                        <p>
+                            Here's what's happening with your
+                            Blood Bank today.
+                        </p>
+
+                    </div>
+
+
+                    <div class="welcome-message">
+
+                        <p>
+                            "Every donation counts.
+                            Every life matters."
+                        </p>
+
+                        <span class="heartbeat-line">
+                            ──╱╲──╱╲──
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <!-- ==========================
+                     STATISTICS
+                =========================== -->
+
+                <section
+                    class="statistics-grid"
+                    aria-label="Blood Bank statistics"
+                >
+
+
+                    <!-- Users -->
+
+                    <article class="stat-card stat-users">
+
+                        <div class="stat-icon">
+                            <span>♟</span>
+                        </div>
+
+                        <div class="stat-content">
+
+                            <p>
+                                Total Users
+                            </p>
+
+                            <h2 id="totalUsers">
+                                0
+                            </h2>
+
+                            <div class="stat-change positive">
+
+                                <span>
+                                    ↑
+                                </span>
+
+                                <span id="usersChange">
+                                    0%
+                                </span>
+
+                                <small>
+                                    this month
+                                </small>
+
+                            </div>
+
+                        </div>
+
+                    </article>
+
+
+                    <!-- Donors -->
+
+                    <article class="stat-card stat-donors">
+
+                        <div class="stat-icon">
+                            <span>♥</span>
+                        </div>
+
+                        <div class="stat-content">
+
+                            <p>
+                                Total Donors
+                            </p>
+
+                            <h2 id="totalDonors">
+                                0
+                            </h2>
+
+                            <div class="stat-change positive">
+
+                                <span>
+                                    ↑
+                                </span>
+
+                                <span id="donorsChange">
+                                    0%
+                                </span>
+
+                                <small>
+                                    this month
+                                </small>
+
+                            </div>
+
+                        </div>
+
+                    </article>
+
+
+                    <!-- Blood Units -->
+
+                    <article class="stat-card stat-blood">
+
+                        <div class="stat-icon">
+                            <span>♦</span>
+                        </div>
+
+                        <div class="stat-content">
+
+                            <p>
+                                Available Blood Units
+                            </p>
+
+                            <h2 id="availableBloodUnits">
+                                0
+                            </h2>
+
+                            <div class="stat-change positive">
+
+                                <span>
+                                    ↑
+                                </span>
+
+                                <span id="bloodUnitsChange">
+                                    0%
+                                </span>
+
+                                <small>
+                                    this week
+                                </small>
+
+                            </div>
+
+                        </div>
+
+                    </article>
+
+
+                    <!-- Requests -->
+
+                    <article class="stat-card stat-requests">
+
+                        <div class="stat-icon">
+                            <span>▤</span>
+                        </div>
+
+                        <div class="stat-content">
+
+                            <p>
+                                Pending Requests
+                            </p>
+
+                            <h2 id="pendingRequests">
+                                0
+                            </h2>
+
+                            <div class="stat-change negative">
+
+                                <span>
+                                    ↓
+                                </span>
+
+                                <span id="requestsChange">
+                                    0%
+                                </span>
+
+                                <small>
+                                    this week
+                                </small>
+
+                            </div>
+
+                        </div>
+
+                    </article>
+
+
+                    <!-- Donations -->
+
+                    <article class="stat-card stat-donations">
+
+                        <div class="stat-icon">
+                            <span>♥</span>
+                        </div>
+
+                        <div class="stat-content">
+
+                            <p>
+                                Total Donations
+                            </p>
+
+                            <h2 id="totalDonations">
+                                0
+                            </h2>
+
+                            <div class="stat-change positive">
+
+                                <span>
+                                    ↑
+                                </span>
+
+                                <span id="donationsChange">
+                                    0%
+                                </span>
+
+                                <small>
+                                    this month
+                                </small>
+
+                            </div>
+
+                        </div>
+
+                    </article>
+
+                </section>
+
+
+                <!-- ==========================
+                     MIDDLE SECTION
+                =========================== -->
+
+                <section class="dashboard-middle-grid">
+
+
+                    <!-- Blood Inventory Chart -->
+
+                    <article class="dashboard-card inventory-overview">
+
+                        <div class="card-header">
+
+                            <div>
+
+                                <h2>
+                                    Blood Inventory by Blood Group
+                                </h2>
+
+                                <p>
+                                    Current available blood units
+                                </p>
+
+                            </div>
+
+
+                            <a
+                                href="/admin/blood-inventory"
+                                class="card-action"
+                            >
+                                View Inventory →
+                            </a>
+
+                        </div>
+
+
+                        <div
+                            class="blood-chart"
+                            id="bloodInventoryChart"
+                            aria-label="Blood inventory chart"
+                        >
+
+                            <div class="chart-empty-state">
+                                Loading inventory...
+                            </div>
+
+                        </div>
+
+                    </article>
+
+
+                    <!-- Recent Activity -->
+
+                    <article class="dashboard-card recent-activity">
+
+                        <div class="card-header">
+
+                            <div>
+
+                                <h2>
+                                    Recent Activity
+                                </h2>
+
+                                <p>
+                                    Latest Blood Bank activities
+                                </p>
+
+                            </div>
+
+
+                            <button
+                                type="button"
+                                class="card-action"
+                                id="viewAllActivity"
+                            >
+                                View All →
+                            </button>
+
+                        </div>
+
+
+                        <div
+                            class="activity-list"
+                            id="recentActivityList"
+                        >
+
+                            <div class="activity-loading">
+                                Loading activity...
+                            </div>
+
+                        </div>
+
+                    </article>
+
+                </section>
+
+
+                <!-- ==========================
+                     BOTTOM SECTION
+                =========================== -->
+
+                <section class="dashboard-bottom-grid">
+
+
+                    <!-- Pending Requests -->
+
+                    <article class="dashboard-card pending-requests-card">
+
+                        <div class="card-header">
+
+                            <div>
+
+                                <h2>
+                                    Pending Blood Requests
+                                </h2>
+
+                                <p>
+                                    Requests waiting for action
+                                </p>
+
+                            </div>
+
+
+                            <a
+                                href="/admin/blood-requests"
+                                class="card-action"
+                            >
+                                View All →
+                            </a>
+
+                        </div>
+
+
+                        <div class="table-wrapper">
+
+                            <table class="dashboard-table">
+
+                                <thead>
+
+                                    <tr>
+
+                                        <th>#</th>
+
+                                        <th>
+                                            Patient Name
+                                        </th>
+
+                                        <th>
+                                            Blood Group
+                                        </th>
+
+                                        <th>
+                                            Units
+                                        </th>
+
+                                        <th>
+                                            Hospital
+                                        </th>
+
+                                        <th>
+                                            Date
+                                        </th>
+
+                                        <th>
+                                            Status
+                                        </th>
+
+                                    </tr>
+
+                                </thead>
+
+
+                                <tbody id="pendingRequestsTable">
+
+                                    <tr>
+
+                                        <td
+                                            colspan="7"
+                                            class="table-loading"
+                                        >
+                                            Loading requests...
+                                        </td>
+
+                                    </tr>
+
+                                </tbody>
+
+                            </table>
+
+                        </div>
+
+                    </article>
+
+
+                    <!-- Quick Actions -->
+
+                    <article class="dashboard-card quick-actions-card">
+
+                        <div class="card-header">
+
+                            <div>
+
+                                <h2>
+                                    Quick Actions
+                                </h2>
+
+                                <p>
+                                    Frequently used actions
+                                </p>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="quick-actions-grid">
+
+
+                            <a
+                                href="/admin/blood-inventory"
+                                class="quick-action quick-action-inventory"
+                            >
+
+                                <span class="quick-action-icon">
+                                    ♦
+                                </span>
+
+                                <span>
+                                    Add Blood Inventory
+                                </span>
+
+                            </a>
+
+
+                            <a
+                                href="/admin/blood-requests"
+                                class="quick-action quick-action-requests"
+                            >
+
+                                <span class="quick-action-icon">
+                                    ▤
+                                </span>
+
+                                <span>
+                                    View All Requests
+                                </span>
+
+                            </a>
+
+
+                            <a
+                                href="/admin/donors"
+                                class="quick-action quick-action-donors"
+                            >
+
+                                <span class="quick-action-icon">
+                                    ♟
+                                </span>
+
+                                <span>
+                                    Register Donor
+                                </span>
+
+                            </a>
+
+
+                            <a
+                                href="/admin/users"
+                                class="quick-action quick-action-users"
+                            >
+
+                                <span class="quick-action-icon">
+                                    ♟
+                                </span>
+
+                                <span>
+                                    Manage Users
+                                </span>
+
+                            </a>
+
+                        </div>
+
+
+                        <!-- Save Lives Banner -->
+
+                        <div class="save-lives-banner">
+
+                            <div class="save-lives-banner-icon">
+                                ♟
+                            </div>
+
+
+                            <div class="save-lives-banner-content">
+
+                                <h3>
+                                    Together We Can Save Lives
+                                </h3>
+
+                                <p>
+                                    Manage. Support. Donate.
+                                    Make a Difference.
+                                </p>
+
+                            </div>
+
+
+                            <span class="save-lives-arrow">
+                                →
+                            </span>
+
+                        </div>
+
+                    </article>
+
+                </section>
+
+
+                <!-- ==========================
+                     DASHBOARD LOADING OVERLAY
+                =========================== -->
+
+                <div
+                    class="dashboard-loading"
+                    id="dashboardLoading"
+                    hidden
+                >
+
+                    <div class="loading-spinner">
+                    </div>
+
+                    <p>
+                        Loading dashboard...
+                    </p>
+
+                </div>
+
+
+                <!-- ==========================
+                     DASHBOARD ERROR
+                =========================== -->
+
+                <div
+                    class="dashboard-error"
+                    id="dashboardError"
+                    hidden
+                    role="alert"
+                >
+
+                    <strong>
+                        Unable to load dashboard
+                    </strong>
+
+
+                    <p id="dashboardErrorMessage">
+                        Something went wrong while loading
+                        dashboard data.
+                    </p>
+
+
+                    <button
+                        type="button"
+                        id="retryDashboardButton"
+                    >
+                        Try Again
+                    </button>
+
+                </div>
+
+
+                <!-- ==========================
+                     EMPTY STATE
+                =========================== -->
+
+                <div
+                    class="dashboard-empty"
+                    id="dashboardEmpty"
+                    hidden
+                >
+
+                    <h3>
+                        No dashboard data available
+                    </h3>
+
+                    <p>
+                        There is currently no data available
+                        in the Blood Bank database.
+                    </p>
+
+                </div>
+
+            </section>
+
+        </main>
+
+    </div>
+
+
+    <!-- ==============================
+         MOBILE SIDEBAR OVERLAY
+    =============================== -->
+
+    <div
+        class="sidebar-overlay"
+        id="sidebarOverlay"
+        hidden
+    ></div>
+
+
+    <!-- ==============================
+         PROFILE DROPDOWN
+    =============================== -->
+
+    <div
+        class="profile-dropdown"
+        id="profileDropdown"
+        hidden
+    >
+
+        <a href="/dashboard">
+            My Profile
+        </a>
+
+
+        <button
+            type="button"
+            id="dropdownLogoutButton"
+        >
+            Logout
+        </button>
+
+    </div>
+
+
+    <!-- ==============================
+         NOTIFICATION PANEL
+    =============================== -->
+
+    <div
+        class="notification-panel"
+        id="notificationPanel"
+        hidden
+    >
+
+        <div class="notification-panel-header">
+
+            <h3>
+                Notifications
+            </h3>
+
+
+            <button
+                type="button"
+                id="closeNotificationPanel"
+                aria-label="Close notifications"
+            >
+                ×
+            </button>
+
+        </div>
+
+
+        <div
+            class="notification-panel-body"
+            id="notificationPanelBody"
+        >
+
+            <p class="no-notifications">
+                No new notifications.
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <!-- Dashboard JavaScript -->
+
+    <script src="/js/admin-dashboard.js"></script>
+
+</body>
+
+</html>

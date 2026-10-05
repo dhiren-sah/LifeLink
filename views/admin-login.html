@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Admin Login | Blood Bank Management System</title>
+
+    <link
+        rel="stylesheet"
+        href="/css/admin-login.css"
+    >
+</head>
+
+<body>
+
+    <main class="admin-login-page">
+
+        <section class="admin-login-card">
+
+            <div class="admin-logo">
+                🩸
+            </div>
+
+            <p class="admin-label">
+                ADMIN PORTAL
+            </p>
+
+            <h1>
+                Welcome Back
+            </h1>
+
+            <p class="admin-subtitle">
+                Sign in to access the Blood Bank
+                Management System administration panel.
+            </p>
+
+
+            <form id="adminLoginForm">
+
+                <!-- Email / Phone -->
+                <div class="form-group">
+
+                    <label for="identifier">
+                        Email or Phone Number
+                    </label>
+
+                    <input
+                        type="text"
+                        id="identifier"
+                        name="identifier"
+                        placeholder="Enter email or phone number"
+                        autocomplete="username"
+                        required
+                    >
+
+                </div>
+
+
+                <!-- Password -->
+                <div class="form-group">
+
+                    <label for="password">
+                        Password
+                    </label>
+
+                    <input
+                        type="password"
+                        id="password"
+                        name="password"
+                        placeholder="Enter your password"
+                        autocomplete="current-password"
+                        required
+                    >
+
+                </div>
+
+
+                <!-- Error -->
+                <div
+                    id="adminLoginError"
+                    class="login-error"
+                    hidden
+                ></div>
+
+
+                <!-- Login Button -->
+                <button
+                    type="submit"
+                    id="adminLoginButton"
+                >
+                    <span id="loginButtonText">
+                        Admin Login
+                    </span>
+                </button>
+
+            </form>
+
+
+            <div class="back-link">
+
+                <a href="/">
+                    ← Back to Blood Bank
+                </a>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <script src="/js/admin-login.js"></script>
+
+</body>
+</html>

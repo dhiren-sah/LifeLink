@@ -11,7 +11,7 @@
     >
 
     <title>
-        Blood Inventory - BBMS Admin
+        Blood Requests - BBMS Admin
     </title>
 
 
@@ -85,7 +85,6 @@
             align-items: center;
             justify-content: center;
             font-size: 20px;
-            font-weight: 700;
             margin-right: 11px;
         }
 
@@ -121,7 +120,6 @@
             border-radius: 7px;
             margin-bottom: 4px;
             font-size: 13px;
-            transition: 0.2s;
         }
 
 
@@ -310,7 +308,7 @@
            STAT CARDS
         ================================================= */
 
-        .inventory-stats {
+        .request-stats {
             display: grid;
             grid-template-columns:
                 repeat(4, 1fr);
@@ -348,10 +346,10 @@
 
 
         /* =================================================
-           TOOLBAR
+           PANEL
         ================================================= */
 
-        .inventory-panel {
+        .request-panel {
             background: #fff;
             border: 1px solid #e7e9ec;
             border-radius: 10px;
@@ -359,7 +357,7 @@
         }
 
 
-        .inventory-toolbar {
+        .request-toolbar {
             padding: 17px 18px;
             border-bottom: 1px solid #e7e9ec;
             display: flex;
@@ -370,8 +368,7 @@
 
 
         .search-box {
-            position: relative;
-            width: 330px;
+            width: 340px;
         }
 
 
@@ -406,6 +403,22 @@
         }
 
 
+        .request-error {
+            margin: 15px 18px;
+            padding: 11px 13px;
+            background: #fff0f1;
+            color: #b51f2e;
+            border: 1px solid #f3c7cb;
+            border-radius: 7px;
+            font-size: 13px;
+        }
+
+
+        .request-error[hidden] {
+            display: none;
+        }
+
+
         /* =================================================
            TABLE
         ================================================= */
@@ -416,14 +429,14 @@
         }
 
 
-        .inventory-table {
+        .request-table {
             width: 100%;
             border-collapse: collapse;
-            min-width: 850px;
+            min-width: 950px;
         }
 
 
-        .inventory-table th {
+        .request-table th {
             background: #fafafa;
             color: #737b86;
             font-size: 11px;
@@ -436,7 +449,7 @@
         }
 
 
-        .inventory-table td {
+        .request-table td {
             padding: 15px 18px;
             border-bottom: 1px solid #eef0f2;
             font-size: 13px;
@@ -444,28 +457,40 @@
         }
 
 
-        .inventory-table tbody tr:hover {
+        .request-table tbody tr:hover {
             background: #fcfcfc;
         }
 
 
-        .blood-group {
-            width: 42px;
-            height: 42px;
-            border-radius: 50%;
-            background: #fff0f1;
-            color: #d62839;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 700;
-            border: 1px solid #f4c9ce;
+        .requester-name {
+            font-weight: 600;
+            margin-bottom: 4px;
         }
 
 
-        .units-value {
-            font-size: 18px;
+        .requester-phone {
+            color: #858c95;
+            font-size: 11px;
+        }
+
+
+        .blood-group-badge {
+            display: inline-flex;
+            width: 40px;
+            height: 40px;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background: #fff0f1;
+            color: #d62839;
+            border: 1px solid #f4c9ce;
             font-weight: 700;
+        }
+
+
+        .units {
+            font-weight: 700;
+            font-size: 16px;
         }
 
 
@@ -488,21 +513,33 @@
         }
 
 
-        .status-available {
+        .status-pending {
+            background: #fff6df;
+            color: #a66b00;
+        }
+
+
+        .status-approved {
             background: #eaf8f0;
             color: #16834b;
         }
 
 
-        .status-low {
-            background: #fff6df;
-            color: #b27600;
+        .status-completed {
+            background: #eaf2ff;
+            color: #2764b5;
         }
 
 
-        .status-out {
+        .status-rejected {
             background: #fff0f1;
             color: #d62839;
+        }
+
+
+        .action-buttons {
+            display: flex;
+            gap: 6px;
         }
 
 
@@ -510,7 +547,7 @@
             border: none;
             background: #f2f3f5;
             color: #34383d;
-            padding: 7px 11px;
+            padding: 7px 10px;
             border-radius: 6px;
             cursor: pointer;
             font-size: 11px;
@@ -519,43 +556,43 @@
 
 
         .action-button:hover {
-            background: #e7e9ec;
+            background: #e6e8eb;
         }
 
 
         /* =================================================
-           LOADING / EMPTY / ERROR
+           LOADING / EMPTY
         ================================================= */
 
-        .inventory-loading,
-        .inventory-empty {
+        .request-loading,
+        .request-empty {
             text-align: center;
             padding: 45px !important;
             color: #777f89;
         }
 
 
-        .inventory-loading strong,
-        .inventory-empty strong {
+        .request-loading strong,
+        .request-empty strong {
             display: block;
             color: #34383d;
             margin-bottom: 5px;
         }
 
 
-        .inventory-spinner {
+        .request-spinner {
             width: 25px;
             height: 25px;
             border: 3px solid #e4e6e9;
             border-top-color: #d62839;
             border-radius: 50%;
             animation:
-                inventorySpin 0.8s linear infinite;
+                requestSpin 0.8s linear infinite;
             margin: 0 auto 12px;
         }
 
 
-        @keyframes inventorySpin {
+        @keyframes requestSpin {
 
             to {
                 transform: rotate(360deg);
@@ -564,27 +601,11 @@
         }
 
 
-        .inventory-error {
-            margin: 15px 18px;
-            padding: 11px 13px;
-            background: #fff0f1;
-            color: #b51f2e;
-            border: 1px solid #f3c7cb;
-            border-radius: 7px;
-            font-size: 13px;
-        }
-
-
-        .inventory-error[hidden] {
-            display: none;
-        }
-
-
         /* =================================================
            MODAL
         ================================================= */
 
-        .inventory-modal-overlay {
+        .request-modal-overlay {
             position: fixed;
             inset: 0;
             background: rgba(0, 0, 0, 0.48);
@@ -596,9 +617,9 @@
         }
 
 
-        .inventory-modal {
+        .request-modal {
             width: 100%;
-            max-width: 480px;
+            max-width: 540px;
             background: #fff;
             border-radius: 11px;
             box-shadow:
@@ -608,7 +629,7 @@
         }
 
 
-        .inventory-modal-header {
+        .request-modal-header {
             padding: 20px;
             border-bottom: 1px solid #e7e9ec;
             display: flex;
@@ -617,13 +638,13 @@
         }
 
 
-        .inventory-modal-header h2 {
+        .request-modal-header h2 {
             margin: 0 0 5px;
             font-size: 18px;
         }
 
 
-        .inventory-modal-header p {
+        .request-modal-header p {
             margin: 0;
             color: #7b838d;
             font-size: 12px;
@@ -636,31 +657,63 @@
             font-size: 25px;
             cursor: pointer;
             color: #777;
-            line-height: 1;
         }
 
 
-        .inventory-modal-body {
+        .request-modal-body {
             padding: 20px;
         }
 
 
-        .inventory-form-group {
-            margin-bottom: 17px;
+        .detail-grid {
+            display: grid;
+            grid-template-columns:
+                repeat(2, 1fr);
+            gap: 15px;
         }
 
 
-        .inventory-form-group label {
+        .detail-item {
+            padding: 12px;
+            background: #f8f9fa;
+            border-radius: 7px;
+        }
+
+
+        .detail-item.full-width {
+            grid-column: 1 / -1;
+        }
+
+
+        .detail-item span {
+            display: block;
+            color: #858c95;
+            font-size: 11px;
+            margin-bottom: 5px;
+        }
+
+
+        .detail-item strong {
+            display: block;
+            font-size: 13px;
+            word-break: break-word;
+        }
+
+
+        .status-select-group {
+            margin-top: 20px;
+        }
+
+
+        .status-select-group label {
             display: block;
             margin-bottom: 7px;
             font-size: 12px;
             font-weight: 600;
-            color: #444;
         }
 
 
-        .inventory-form-group input,
-        .inventory-form-group select {
+        .status-select-group select {
             width: 100%;
             padding: 11px 12px;
             border: 1px solid #dfe2e6;
@@ -670,13 +723,12 @@
         }
 
 
-        .inventory-form-group input:focus,
-        .inventory-form-group select:focus {
+        .status-select-group select:focus {
             border-color: #d62839;
         }
 
 
-        .inventory-modal-footer {
+        .request-modal-footer {
             padding: 15px 20px;
             border-top: 1px solid #e7e9ec;
             display: flex;
@@ -715,14 +767,12 @@
 
 
         /* =================================================
-           NOTIFICATION
+           PROFILE / NOTIFICATION
         ================================================= */
 
-        .notification-panel {
+        .notification-panel,
+        .profile-dropdown {
             position: fixed;
-            top: 65px;
-            right: 25px;
-            width: 310px;
             background: #fff;
             border: 1px solid #e5e7eb;
             border-radius: 9px;
@@ -730,6 +780,21 @@
                 0 12px 40px
                 rgba(0, 0, 0, 0.12);
             z-index: 2000;
+        }
+
+
+        .notification-panel {
+            top: 65px;
+            right: 25px;
+            width: 310px;
+        }
+
+
+        .profile-dropdown {
+            top: 62px;
+            right: 25px;
+            width: 180px;
+            overflow: hidden;
         }
 
 
@@ -747,11 +812,6 @@
         }
 
 
-        .notification-header strong {
-            font-size: 13px;
-        }
-
-
         .notification-close {
             border: none;
             background: transparent;
@@ -763,26 +823,6 @@
             padding: 18px;
             color: #777;
             font-size: 12px;
-        }
-
-
-        /* =================================================
-           PROFILE DROPDOWN
-        ================================================= */
-
-        .profile-dropdown {
-            position: fixed;
-            top: 62px;
-            right: 25px;
-            width: 180px;
-            background: #fff;
-            border: 1px solid #e5e7eb;
-            border-radius: 8px;
-            box-shadow:
-                0 12px 35px
-                rgba(0, 0, 0, 0.12);
-            z-index: 2000;
-            overflow: hidden;
         }
 
 
@@ -803,7 +843,7 @@
 
 
         /* =================================================
-           SIDEBAR OVERLAY
+           MOBILE
         ================================================= */
 
         .sidebar-overlay {
@@ -811,15 +851,11 @@
         }
 
 
-        /* =================================================
-           RESPONSIVE
-        ================================================= */
-
         @media (
             max-width: 900px
         ) {
 
-            .inventory-stats {
+            .request-stats {
                 grid-template-columns:
                     repeat(2, 1fr);
             }
@@ -856,7 +892,8 @@
             }
 
 
-            .sidebar-overlay {
+            .sidebar-overlay:not([hidden]) {
+                display: block;
                 position: fixed;
                 inset: 0;
                 background:
@@ -865,17 +902,12 @@
             }
 
 
-            .sidebar-overlay:not([hidden]) {
-                display: block;
-            }
-
-
             .admin-content {
                 padding: 18px;
             }
 
 
-            .inventory-toolbar {
+            .request-toolbar {
                 flex-direction: column;
                 align-items: stretch;
             }
@@ -886,7 +918,7 @@
             }
 
 
-            .inventory-stats {
+            .request-stats {
                 grid-template-columns:
                     1fr;
             }
@@ -894,6 +926,12 @@
 
             .profile-name {
                 display: none;
+            }
+
+
+            .detail-grid {
+                grid-template-columns:
+                    1fr;
             }
 
         }
@@ -942,13 +980,10 @@
                 href="/admin/dashboard"
                 class="sidebar-link"
             >
-
                 <span class="sidebar-icon">
                     ▦
                 </span>
-
                 Dashboard
-
             </a>
 
 
@@ -956,13 +991,10 @@
                 href="/admin/users"
                 class="sidebar-link"
             >
-
                 <span class="sidebar-icon">
                     👥
                 </span>
-
                 Users
-
             </a>
 
 
@@ -970,27 +1002,21 @@
                 href="/admin/donors"
                 class="sidebar-link"
             >
-
                 <span class="sidebar-icon">
                     ♟
                 </span>
-
                 Donors
-
             </a>
 
 
             <a
                 href="/admin/blood-inventory"
-                class="sidebar-link active"
+                class="sidebar-link"
             >
-
                 <span class="sidebar-icon">
                     🩸
                 </span>
-
                 Blood Inventory
-
             </a>
 
 
@@ -1001,15 +1027,12 @@
 
             <a
                 href="/admin/blood-requests"
-                class="sidebar-link"
+                class="sidebar-link active"
             >
-
                 <span class="sidebar-icon">
                     📋
                 </span>
-
                 Blood Requests
-
             </a>
 
 
@@ -1017,13 +1040,10 @@
                 href="/admin/donations"
                 class="sidebar-link"
             >
-
                 <span class="sidebar-icon">
                     💉
                 </span>
-
                 Donations
-
             </a>
 
 
@@ -1031,13 +1051,10 @@
                 href="/admin/settings"
                 class="sidebar-link"
             >
-
                 <span class="sidebar-icon">
                     ⚙
                 </span>
-
                 Settings
-
             </a>
 
         </nav>
@@ -1094,14 +1111,13 @@
 
 
                 <div class="page-title">
-                    Blood Inventory
+                    Blood Requests
                 </div>
 
             </div>
 
 
             <div class="header-right">
-
 
                 <button
                     type="button"
@@ -1155,11 +1171,11 @@
             <div class="page-heading">
 
                 <h1>
-                    Blood Inventory
+                    Blood Requests
                 </h1>
 
                 <p>
-                    Monitor and manage available blood units.
+                    Review and manage blood requests submitted by users.
                 </p>
 
             </div>
@@ -1167,24 +1183,24 @@
 
             <!-- STATS -->
 
-            <div class="inventory-stats">
+            <div class="request-stats">
 
 
                 <div class="stat-card">
 
                     <div class="stat-label">
-                        Total Units
+                        Total Requests
                     </div>
 
                     <div
                         class="stat-value"
-                        id="totalUnits"
+                        id="totalRequests"
                     >
                         0
                     </div>
 
                     <div class="stat-description">
-                        All blood groups combined
+                        All blood requests
                     </div>
 
                 </div>
@@ -1193,18 +1209,18 @@
                 <div class="stat-card">
 
                     <div class="stat-label">
-                        Available
+                        Pending
                     </div>
 
                     <div
                         class="stat-value"
-                        id="availableGroups"
+                        id="pendingRequests"
                     >
                         0
                     </div>
 
                     <div class="stat-description">
-                        Blood groups with healthy stock
+                        Waiting for review
                     </div>
 
                 </div>
@@ -1213,18 +1229,18 @@
                 <div class="stat-card">
 
                     <div class="stat-label">
-                        Low Stock
+                        Approved
                     </div>
 
                     <div
                         class="stat-value"
-                        id="lowStockGroups"
+                        id="approvedRequests"
                     >
                         0
                     </div>
 
                     <div class="stat-description">
-                        Groups requiring attention
+                        Approved requests
                     </div>
 
                 </div>
@@ -1233,18 +1249,18 @@
                 <div class="stat-card">
 
                     <div class="stat-label">
-                        Out of Stock
+                        Completed
                     </div>
 
                     <div
                         class="stat-value"
-                        id="outOfStockGroups"
+                        id="completedRequests"
                     >
                         0
                     </div>
 
                     <div class="stat-description">
-                        Groups with zero units
+                        Completed requests
                     </div>
 
                 </div>
@@ -1253,19 +1269,19 @@
             </div>
 
 
-            <!-- INVENTORY PANEL -->
+            <!-- REQUEST PANEL -->
 
-            <div class="inventory-panel">
+            <div class="request-panel">
 
 
-                <div class="inventory-toolbar">
+                <div class="request-toolbar">
 
                     <div class="search-box">
 
                         <input
                             type="text"
-                            id="inventorySearch"
-                            placeholder="Search blood group or status..."
+                            id="requestSearch"
+                            placeholder="Search requester, blood group, city..."
                             autocomplete="off"
                         >
 
@@ -1275,7 +1291,7 @@
                     <button
                         type="button"
                         class="refresh-button"
-                        id="inventoryRefreshButton"
+                        id="requestRefreshButton"
                     >
                         ↻ Refresh
                     </button>
@@ -1284,26 +1300,34 @@
 
 
                 <div
-                    class="inventory-error"
-                    id="inventoryError"
+                    class="request-error"
+                    id="requestError"
                     hidden
                 ></div>
 
 
                 <div class="table-wrapper">
 
-                    <table class="inventory-table">
+                    <table class="request-table">
 
                         <thead>
 
                             <tr>
 
                                 <th>
+                                    Requester
+                                </th>
+
+                                <th>
                                     Blood Group
                                 </th>
 
                                 <th>
-                                    Available Units
+                                    Units
+                                </th>
+
+                                <th>
+                                    Location
                                 </th>
 
                                 <th>
@@ -1311,7 +1335,7 @@
                                 </th>
 
                                 <th>
-                                    Last Updated
+                                    Requested
                                 </th>
 
                                 <th>
@@ -1324,22 +1348,22 @@
 
 
                         <tbody
-                            id="inventoryTableBody"
+                            id="requestTableBody"
                         >
 
                             <tr>
 
                                 <td
-                                    colspan="5"
-                                    class="inventory-loading"
+                                    colspan="7"
+                                    class="request-loading"
                                 >
 
                                     <div
-                                        class="inventory-spinner"
+                                        class="request-spinner"
                                     ></div>
 
                                     <strong>
-                                        Loading inventory...
+                                        Loading blood requests...
                                     </strong>
 
                                     Please wait.
@@ -1393,9 +1417,7 @@
 
 
     <div class="notification-body">
-
         No new notifications.
-
     </div>
 
 </div>
@@ -1421,7 +1443,7 @@
 </div>
 
 
-<script src="/js/admin-blood-inventory.js"></script>
+<script src="/js/admin-blood-requests.js"></script>
 
 
 </body>

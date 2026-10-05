@@ -3,9 +3,10 @@
 
 <head>
     <meta charset="UTF-8">
-
-    <!-- Responsive Viewport -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="description"
+        content="Blood Bank Management System - Donate Blood, Save Lives.">
 
     <title>Blood Bank Management System</title>
 
@@ -14,74 +15,273 @@
 
 <body>
 
-    <!-- ================= HEADER ================= -->
+    <!-- =====================================================
+         HEADER
+    ====================================================== -->
 
     <header class="main-header">
 
-        <div class="logo">
-            <a href="/">
-                <h2>🩸 BBMS</h2>
-            </a>
+        <div class="header-inner">
+
+            <!-- LOGO -->
+            <div class="logo">
+
+                <a href="/">
+
+                    <div class="logo-icon">
+                        🩸
+                    </div>
+
+                    <div class="logo-text">
+
+                        <h2>Blood Bank</h2>
+
+                        <span>
+                            Donate Blood, <strong>Give Life.</strong>
+                        </span>
+
+                    </div>
+
+                </a>
+
+            </div>
+
+
+            <!-- NAVIGATION -->
+            <nav class="nav-menu" id="navMenu">
+
+                <a href="/" class="nav-link active">
+                    <span>⌂</span>
+                    Home
+                </a>
+
+                <a href="/blood-availability" class="nav-link">
+                    <span>🩸</span>
+                    Blood Availability
+                </a>
+
+                <a href="/blood-request" class="nav-link">
+                    <span>📄</span>
+                    Blood Request
+                </a>
+
+                <!-- FIXED ABOUT US LINK -->
+                <a href="/about" class="nav-link">
+                    <span>ⓘ</span>
+                    About Us
+                </a>
+
+                <!-- FIXED CONTACT LINK -->
+                <a href="/contact" class="nav-link">
+                    <span>☎</span>
+                    Contact
+                </a>
+
+            </nav>
+
+
+            <!-- SEARCH -->
+            <div class="header-search">
+
+                <span>⌕</span>
+
+                <input
+                    type="text"
+                    id="headerSearch"
+                    placeholder="Search blood type, city..."
+                    aria-label="Search blood type or city"
+                >
+
+            </div>
+
+
+            <!-- AUTH BUTTONS -->
+            <div class="header-actions">
+
+                <a href="/login" class="login-btn">
+                    <span>♙</span>
+                    Login
+                </a>
+
+                <a href="/register" class="register-btn">
+                    <span>♟</span>
+                    Register
+                </a>
+
+            </div>
+
+
+            <!-- MOBILE MENU -->
+            <button
+                class="menu-toggle"
+                id="menuToggle"
+                type="button"
+                aria-label="Open navigation menu"
+                aria-expanded="false"
+                aria-controls="navMenu"
+            >
+                ☰
+            </button>
+
         </div>
-
-        <!-- Desktop + Mobile Navigation -->
-        <nav class="nav-menu" id="navMenu">
-
-            <a href="/">Home</a>
-            <a href="/blood-availability">Blood Availability</a>
-            <a href="/blood-request">Blood Request</a>
-            <a href="/login">Login</a>
-            <a href="/register">Register</a>
-
-        </nav>
-
-        <!-- Mobile Hamburger Button -->
-        <button
-            class="menu-toggle"
-            id="menuToggle"
-            type="button"
-            aria-label="Open navigation menu"
-            aria-expanded="false"
-            aria-controls="navMenu"
-        >
-            ☰
-        </button>
 
     </header>
 
 
-    <!-- ================= HERO ================= -->
+    <!-- =====================================================
+         MAIN
+    ====================================================== -->
 
     <main>
 
+
+        <!-- =================================================
+             HERO
+        ================================================== -->
+
         <section class="hero">
 
-            <div class="hero-content">
+            <div class="hero-overlay"></div>
 
-                <!--
-                    Hero text/design is currently part of the
-                    background image.
+            <div class="hero-container">
 
-                    Desktop image:
-                    /images/hero-desktop.jpg
+                <div class="hero-content">
 
-                    Mobile image:
-                    /images/hero-mobile.jpg
-                -->
+                    <div class="hero-tag">
 
-                <div class="buttons">
+                        PEOPLE
 
-                    <a href="/blood-request" class="btn">
-                        Blood Request
-                    </a>
+                        <span>|</span>
 
-                    <a href="/register" class="btn">
-                        Become Donor
-                    </a>
+                        DONATION
 
-                    <a href="/blood-availability" class="btn2">
-                        Search Blood
-                    </a>
+                        <span>|</span>
+
+                        CARE
+
+                        <span>|</span>
+
+                        STRONGER COMMUNITIES
+
+                    </div>
+
+
+                    <h1>
+
+                        Donate
+                        <span>Blood</span>
+
+                        <br>
+
+                        Build a Healthier Tomorrow
+
+                    </h1>
+
+
+                    <p>
+
+                        Your single donation can give someone
+                        a second chance at life.
+
+                        Join our community of donors and help
+                        create a safer, healthier and stronger society.
+
+                    </p>
+
+
+                    <div class="hero-buttons">
+
+                        <a href="/register" class="hero-btn primary-btn">
+
+                            <span>🩸</span>
+
+                            Become a Donor
+
+                            <strong>→</strong>
+
+                        </a>
+
+
+                        <a href="/blood-request" class="hero-btn secondary-btn">
+
+                            <span>📄</span>
+
+                            Request Blood
+
+                            <strong>→</strong>
+
+                        </a>
+
+                    </div>
+
+                </div>
+
+
+                <!-- HERO SIDE INFORMATION -->
+
+                <div class="hero-side-info">
+
+                    <div class="info-pill">
+
+                        <div class="info-icon">
+                            🛡
+                        </div>
+
+                        <div>
+
+                            <strong>
+                                Safe Donation
+                            </strong>
+
+                            <span>
+                                Process
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="info-pill">
+
+                        <div class="info-icon">
+                            👥
+                        </div>
+
+                        <div>
+
+                            <strong>
+                                Verified
+                            </strong>
+
+                            <span>
+                                Blood Requests
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="info-pill">
+
+                        <div class="info-icon">
+                            ❤️
+                        </div>
+
+                        <div>
+
+                            <strong>
+                                Real People
+                            </strong>
+
+                            <span>
+                                Real Lives
+                            </span>
+
+                        </div>
+
+                    </div>
 
                 </div>
 
@@ -90,95 +290,511 @@
         </section>
 
 
-        <!-- ================= SEARCH ================= -->
+        <!-- =================================================
+             STATISTICS
+        ================================================== -->
 
-        <section class="search">
+        <section class="stats-section">
 
-            <h2>Search Blood Availability</h2>
+            <div class="stats-container">
 
-            <form action="/blood-availability" method="GET">
 
-                <label for="bloodGroup" class="sr-only">
-                    Select Blood Group
-                </label>
+                <div class="stat-card">
 
-                <select
-                    name="bloodGroup"
-                    id="bloodGroup"
-                    required
-                >
+                    <div class="stat-icon">
+                        👥
+                    </div>
 
-                    <option value="">
-                        Select Blood Group
-                    </option>
+                    <div class="stat-content">
 
-                    <option value="A+">A+</option>
-                    <option value="A-">A-</option>
+                        <h3>
+                            1,246
+                        </h3>
 
-                    <option value="B+">B+</option>
-                    <option value="B-">B-</option>
+                        <p>
+                            Registered Donors
+                        </p>
 
-                    <option value="AB+">AB+</option>
-                    <option value="AB-">AB-</option>
+                        <span class="stat-growth">
+                            ↑ 12% this month
+                        </span>
 
-                    <option value="O+">O+</option>
-                    <option value="O-">O-</option>
+                    </div>
 
-                </select>
+                    <div class="stat-graph">
+                        ╱╲╱╲╱╲
+                    </div>
 
-                <button type="submit">
-                    Search
-                </button>
+                </div>
 
-            </form>
+
+                <div class="stat-card">
+
+                    <div class="stat-icon">
+                        🩸
+                    </div>
+
+                    <div class="stat-content">
+
+                        <h3>
+                            823
+                        </h3>
+
+                        <p>
+                            Blood Units Available
+                        </p>
+
+                        <span class="stat-growth">
+                            ↑ 8% this week
+                        </span>
+
+                    </div>
+
+                    <div class="stat-bars">
+                        ▂ ▃ ▅ ▆ ▇
+                    </div>
+
+                </div>
+
+
+                <div class="stat-card">
+
+                    <div class="stat-icon">
+                        📄
+                    </div>
+
+                    <div class="stat-content">
+
+                        <h3>
+                            357
+                        </h3>
+
+                        <p>
+                            Blood Requests
+                        </p>
+
+                        <span class="stat-growth">
+                            ↑ 15% this month
+                        </span>
+
+                    </div>
+
+                    <div class="stat-bars">
+                        ▂ ▃ ▄ ▆ ▇
+                    </div>
+
+                </div>
+
+
+                <div class="stat-card">
+
+                    <div class="stat-icon">
+                        ❤️
+                    </div>
+
+                    <div class="stat-content">
+
+                        <h3>
+                            98
+                        </h3>
+
+                        <p>
+                            Lives Impacted
+                        </p>
+
+                        <span class="stat-description">
+                            Through your support
+                        </span>
+
+                    </div>
+
+                    <div class="stat-graph">
+                        ╱╲╱╲╱╲
+                    </div>
+
+                </div>
+
+            </div>
 
         </section>
 
 
-        <!-- ================= FEATURES ================= -->
+        <!-- =================================================
+             MAIN CONTENT GRID
+        ================================================== -->
 
-        <section class="features">
+        <section class="home-grid-section">
 
-            <div class="card">
+            <div class="home-grid-container">
 
-                <h3>🧑 Donor Registration</h3>
 
-                <p>
-                    Register yourself as a blood donor.
-                </p>
+                <!-- DONATION CARD -->
+
+                <div class="impact-card">
+
+                    <div class="impact-overlay"></div>
+
+                    <div class="impact-content">
+
+                        <span class="small-heading">
+                            — A SMALL ACT
+                        </span>
+
+                        <h2>
+                            A BIG IMPACT
+                        </h2>
+
+                        <p>
+
+                            Blood connects people.
+
+                            Your donation can help accident
+                            victims, patients in surgery,
+                            children with blood disorders
+                            and many more.
+
+                        </p>
+
+
+                        <a href="/register" class="learn-btn">
+
+                            Learn More
+
+                            <strong>→</strong>
+
+                        </a>
+
+                    </div>
+
+                </div>
+
+
+                <!-- HOW IT WORKS -->
+
+                <div class="how-it-works">
+
+                    <div class="section-heading">
+
+                        <span></span>
+
+                        <h2>
+                            How It Works?
+                        </h2>
+
+                    </div>
+
+
+                    <div class="steps">
+
+
+                        <!-- STEP 1 -->
+
+                        <div class="step">
+
+                            <div class="step-icon">
+
+                                👤
+
+                                <small>
+                                    1
+                                </small>
+
+                            </div>
+
+                            <h3>
+                                Register
+                            </h3>
+
+                            <p>
+                                Create your account as a donor
+                                or requester.
+                            </p>
+
+                        </div>
+
+
+                        <div class="step-arrow">
+                            →
+                        </div>
+
+
+                        <!-- STEP 2 -->
+
+                        <div class="step">
+
+                            <div class="step-icon">
+
+                                🔍
+
+                                <small>
+                                    2
+                                </small>
+
+                            </div>
+
+                            <h3>
+                                Search / Request
+                            </h3>
+
+                            <p>
+                                Find available blood units
+                                or post a request.
+                            </p>
+
+                        </div>
+
+
+                        <div class="step-arrow">
+                            →
+                        </div>
+
+
+                        <!-- STEP 3 -->
+
+                        <div class="step">
+
+                            <div class="step-icon">
+
+                                👥
+
+                                <small>
+                                    3
+                                </small>
+
+                            </div>
+
+                            <h3>
+                                Connect
+                            </h3>
+
+                            <p>
+                                We connect you with
+                                verified donors.
+                            </p>
+
+                        </div>
+
+
+                        <div class="step-arrow">
+                            →
+                        </div>
+
+
+                        <!-- STEP 4 -->
+
+                        <div class="step">
+
+                            <div class="step-icon">
+
+                                ❤️
+
+                                <small>
+                                    4
+                                </small>
+
+                            </div>
+
+                            <h3>
+                                Save Lives
+                            </h3>
+
+                            <p>
+                                Get the help you need
+                                and make a difference.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- BLOOD SEARCH -->
+
+                <div class="availability-card">
+
+                    <div class="availability-heading">
+
+                        <span>
+                            ⌕
+                        </span>
+
+                        <div>
+
+                            <h2>
+                                Find Blood Availability
+                            </h2>
+
+                            <p>
+                                Search and find available
+                                blood units in your area.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <form
+                        action="/blood-availability"
+                        method="GET"
+                        class="availability-form"
+                    >
+
+                        <select
+                            name="bloodGroup"
+                            id="bloodGroup"
+                            required
+                        >
+
+                            <option value="">
+                                🩸 &nbsp; Select Blood Group
+                            </option>
+
+                            <option value="A+">
+                                A+
+                            </option>
+
+                            <option value="A-">
+                                A-
+                            </option>
+
+                            <option value="B+">
+                                B+
+                            </option>
+
+                            <option value="B-">
+                                B-
+                            </option>
+
+                            <option value="AB+">
+                                AB+
+                            </option>
+
+                            <option value="AB-">
+                                AB-
+                            </option>
+
+                            <option value="O+">
+                                O+
+                            </option>
+
+                            <option value="O-">
+                                O-
+                            </option>
+
+                        </select>
+
+
+                        <input
+                            type="text"
+                            name="city"
+                            id="city"
+                            placeholder="📍 Select Your City"
+                        >
+
+
+                        <button
+                            type="submit"
+                            class="availability-btn"
+                        >
+
+                            🔍
+
+                            Search Now
+
+                            <strong>→</strong>
+
+                        </button>
+
+                    </form>
+
+                </div>
 
             </div>
 
-
-            <div class="card">
-
-                <h3>🩸 Blood Inventory</h3>
-
-                <p>
-                    Check available blood stock instantly.
-                </p>
-
-            </div>
+        </section>
 
 
-            <div class="card">
+        <!-- =================================================
+             IMPACT SECTION
+        ================================================== -->
 
-                <h3>🏥 Hospital Management</h3>
+        <section class="about-section">
 
-                <p>
-                    Hospitals can manage blood requests.
-                </p>
+            <div class="about-container">
 
-            </div>
+                <div class="about-text">
+
+                    <span class="about-label">
+                        BLOOD BANK MANAGEMENT SYSTEM
+                    </span>
+
+                    <h2>
+
+                        Every Drop Can
+
+                        <span>
+                            Save a Life.
+                        </span>
+
+                    </h2>
 
 
-            <div class="card">
+                    <p>
 
-                <h3>🚑 Emergency Request</h3>
+                        Our Blood Bank Management System helps
+                        donors, patients and hospitals connect
+                        efficiently when blood is needed.
 
-                <p>
-                    Send blood request during emergencies.
-                </p>
+                    </p>
+
+
+                    <p>
+
+                        Whether you want to donate blood,
+                        search for available blood or request
+                        blood during an emergency, our platform
+                        makes the process simple and accessible.
+
+                    </p>
+
+
+                    <div class="about-buttons">
+
+                        <a href="/register" class="about-btn">
+                            Become a Donor
+                        </a>
+
+                        <a
+                            href="/blood-availability"
+                            class="about-outline-btn"
+                        >
+                            Check Availability
+                        </a>
+
+                    </div>
+
+                </div>
+
+
+                <div class="about-heart">
+
+                    <div class="heart-circle">
+                        ❤️
+                    </div>
+
+                    <h3>
+                        Together We Save Lives
+                    </h3>
+
+                    <p>
+                        Donate today. Give someone
+                        another tomorrow.
+                    </p>
+
+                </div>
 
             </div>
 
@@ -187,19 +803,81 @@
     </main>
 
 
-    <!-- ================= FOOTER ================= -->
+    <!-- =====================================================
+         FOOTER
+    ====================================================== -->
 
-    <footer>
+    <footer class="main-footer">
 
-        <p>
-            &copy; 2026 Blood Bank Management System.
-            All Rights Reserved.
-        </p>
+        <div class="footer-container">
+
+
+            <div>
+
+                <h3>
+                    🩸 Blood Bank
+                </h3>
+
+                <p>
+                    Donate Blood, Give Life.
+                </p>
+
+            </div>
+
+
+            <div class="footer-links">
+
+                <a href="/">
+                    Home
+                </a>
+
+                <a href="/blood-availability">
+                    Blood Availability
+                </a>
+
+                <a href="/blood-request">
+                    Blood Request
+                </a>
+
+                <a href="/about">
+                    About Us
+                </a>
+
+                <a href="/contact">
+                    Contact
+                </a>
+
+                <a href="/register">
+                    Become a Donor
+                </a>
+
+            </div>
+
+        </div>
+
+
+        <div class="footer-bottom">
+
+            <p>
+
+                &copy;
+
+                <span id="currentYear"></span>
+
+                Blood Bank Management System.
+
+                All Rights Reserved.
+
+            </p>
+
+        </div>
 
     </footer>
 
 
-    <!-- ================= JAVASCRIPT ================= -->
+    <!-- =====================================================
+         JAVASCRIPT
+    ====================================================== -->
 
     <script src="/js/main.js"></script>
 

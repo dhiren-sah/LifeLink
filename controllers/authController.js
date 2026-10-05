@@ -735,6 +735,216 @@ const login = async (req, res) => {
 
 
 // ==============================
+// ADMIN LOGIN
+// ==============================
+
+const adminLogin = async (req, res) => {
+
+    try {
+
+        const {
+            identifier,
+            password
+        } = req.body;
+
+
+        if (!identifier || !password) {
+
+            return res.status(400).json({
+
+                success: false,
+
+                message:
+                    "Email/Phone Number and Password are required."
+
+            });
+
+        }
+
+
+        let user;
+
+
+        // ==============================
+        // FIND ADMIN BY EMAIL
+        // ==============================
+
+        if (identifier.includes("@")) {
+
+            user = await User.findOne({
+
+                email:
+                    identifier.trim().toLowerCase()
+
+            });
+
+        } else {
+
+            // ==============================
+            // FIND ADMIN BY PHONE
+            // ==============================
+
+            user = await User.findOne({
+
+                phoneNumber:
+                    identifier.trim()
+
+            });
+
+        }
+
+
+        if (!user) {
+
+            return res.status(401).json({
+
+                success: false,
+
+                message:
+                    "Invalid admin credentials."
+
+            });
+
+        }
+
+
+        // ==============================
+        // ADMIN ROLE CHECK
+        // ==============================
+
+        if (user.role !== "admin") {
+
+            return res.status(403).json({
+
+                success: false,
+
+                message:
+                    "Admin access denied."
+
+            });
+
+        }
+
+
+        // ==============================
+        // PASSWORD CHECK
+        // ==============================
+
+        let passwordValid = false;
+
+
+        // --------------------------------
+        // BCRYPT PASSWORD
+        // --------------------------------
+
+        if (
+            typeof user.password === "string" &&
+            user.password.startsWith("$2")
+        ) {
+
+            passwordValid =
+                await bcrypt.compare(
+                    password,
+                    user.password
+                );
+
+        }
+
+        // --------------------------------
+        // PLAIN TEXT PASSWORD
+        // --------------------------------
+
+        else {
+
+            passwordValid =
+                user.password === password;
+
+        }
+
+
+        if (!passwordValid) {
+
+            return res.status(401).json({
+
+                success: false,
+
+                message:
+                    "Invalid admin credentials."
+
+            });
+
+        }
+
+
+        // ==============================
+        // CREATE ADMIN SESSION
+        // ==============================
+
+        const token =
+            createSession(user._id);
+
+
+        // ==============================
+        // CREATE LOGIN COOKIE
+        // ==============================
+
+        res.cookie(
+            "bbmsSession",
+            token,
+            {
+                httpOnly: true,
+
+                sameSite: "lax",
+
+                path: "/"
+            }
+        );
+
+
+        // ==============================
+        // SAFE ADMIN RESPONSE
+        // ==============================
+
+        const safeUser =
+            user.toObject();
+
+        delete safeUser.password;
+
+
+        return res.status(200).json({
+
+            success: true,
+
+            message:
+                "Admin Login Successful",
+
+            user: safeUser
+
+        });
+
+
+    } catch (error) {
+
+        console.error(
+            "ADMIN LOGIN ERROR:",
+            error
+        );
+
+        return res.status(500).json({
+
+            success: false,
+
+            message:
+                "Admin login failed."
+
+        });
+
+    }
+
+};
+
+
+// ==============================
 // FORGOT PASSWORD
 // ==============================
 
@@ -1395,6 +1605,8 @@ module.exports = {
     register,
 
     login,
+
+    adminLogin,
 
     logout,
 

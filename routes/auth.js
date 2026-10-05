@@ -21,6 +21,17 @@ router.post(
     authController.login
 );
 
+
+// ==============================
+// ADMIN AUTHENTICATION
+// ==============================
+
+router.post(
+    "/admin-login",
+    authController.adminLogin
+);
+
+
 router.post(
     "/logout",
     authController.logout
